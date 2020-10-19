@@ -1,0 +1,12 @@
+@import '../../variables';
+
+.keyword-item {
+    padding: 0 .25rem;
+    background-color: #{$theme-gray};
+    border-radius: .25rem;
+    border: 1px solid lightgray;
+    .fa.fa-times {
+        margin-left: .25rem;
+        cursor: pointer;
+    }
+}

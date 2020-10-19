@@ -1,0 +1,7 @@
+.hover-dropdown {
+    &.dropright, &.dropleft, &.dropup, &.dropdown {
+        .dropdown-menu {
+            margin: 0;
+        }
+    }
+}

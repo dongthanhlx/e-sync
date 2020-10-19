@@ -1,0 +1,23 @@
+.my-products {
+    .my-products-table {
+        td {
+            span.badge {
+                margin-right: .125rem;
+                font-size: 10px;
+            }
+            .product-status {
+                margin-bottom: .25rem;
+                .status-on {
+                    font-weight: bold;
+                    color: var(--secondary);
+                    display: inline-block;
+                    min-width: 3rem;
+                }
+                .error {
+                    display: inline-block;
+                    min-width: 3rem;
+                }
+            }
+        }
+    }
+}

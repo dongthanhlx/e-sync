@@ -1,0 +1,7 @@
+@import '../../variables';
+
+.sel-footer {
+    height: #{$footer-height};
+    padding: 1rem 15px;
+    border-top: 1px solid #e7e7e7;
+}

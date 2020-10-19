@@ -1,0 +1,17 @@
+.sel-content {
+    // Write SCSS here
+    margin-top: 9px;
+    &.normal {
+        padding: 0 1rem;
+    }
+    &.no-padding {
+        padding: 0;
+    }
+}
+.container-fluid {
+    padding: 20px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}

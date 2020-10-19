@@ -1,0 +1,28 @@
+.edit-product {
+    position: relative;
+    .nav-tabs {
+        margin-bottom: 1rem;
+        .nav-link {
+            padding: 10px 0;
+            margin-right: 20px;
+        }
+    }
+    span.border.shopee-logo {
+        border-color: #ed4d2c !important;
+    }
+    .category-filter .category-trigger {
+        height: 2.375rem;
+        border: 1px solid #2692FF;
+        color:#2692FF;
+    }
+    .publish {
+        height: 5rem;
+        background-color: white;
+        position: sticky;
+        bottom: -20px;
+        z-index: 10;
+        button.btn-primary {
+            min-width: 10rem;
+        }
+    }
+}

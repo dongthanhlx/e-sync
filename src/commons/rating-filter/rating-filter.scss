@@ -1,0 +1,20 @@
+.rating-filter {
+    select.rating-input {
+        max-width: 150px;
+        &:first-child {
+            margin-right: 10px;
+        }
+    }
+    .fa-star {
+        color: var(--yellow);
+    }
+    .dropdown {
+        &:first-child{
+            margin-right: 10px;
+        }
+        .dropdown-toggle {
+            padding: 0.375rem 1.5rem;
+            text-align: left;
+        }
+    }
+}

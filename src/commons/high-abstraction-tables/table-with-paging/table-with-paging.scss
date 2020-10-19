@@ -1,0 +1,60 @@
+.table-with-paging {
+    .custom-btn {
+        border: 1px solid #2692FF;
+    }
+    .btn-setting {
+         border: none; 
+         color: #8a8a8a;
+         &:hover {
+             background-color: #fff !important;
+             border: 1px solid #8a8a8a;
+         }
+    }
+    .twp-paging {
+        ul {
+            margin-bottom: 0;
+        }
+    }
+    .twp-loader {
+        margin-bottom: 1rem;
+    }
+    .twp-pagination {
+        ul {
+            margin-bottom: 0;
+        }
+    }
+    &.ghost-above {
+        position: relative;
+        .twp-paging {
+            position: absolute;
+            top: -3.375rem;
+            right: 0;
+        }
+        .twp-table {
+            // No style
+        }
+        .twp-loader {
+            // No style
+        }
+        .twp-pagination {
+            // No style
+        }
+    }
+    &.ghost-below {
+        position: relative;
+        .twp-paging {
+            // No style
+        }
+        .twp-table {
+            // No style
+        }
+        .twp-loader {
+            // No style
+        }
+        .twp-pagination {
+            position: absolute;
+            bottom: -3.1rem;
+            right: 0;
+        }
+    }
+}

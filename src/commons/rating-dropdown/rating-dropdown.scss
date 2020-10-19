@@ -1,0 +1,6 @@
+@import '../../variables.scss';
+
+.rating-dropdown {
+    border: 1px solid #{$color-input-border};
+    border-radius: .25rem;
+}

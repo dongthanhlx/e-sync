@@ -1,0 +1,13 @@
+@import '../../../variables';
+
+.multiple-selected-item {
+    display: flex;
+    align-items: center;
+    background-color: #{$theme-gray};
+    padding: 0 .25rem;
+    border-radius: .25rem;
+    margin: .125rem .25rem .125rem 0;
+    .item-name {
+        margin-right: .25rem;
+    }
+}

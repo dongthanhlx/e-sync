@@ -1,0 +1,8 @@
+.draggable-modal {
+    .modal-header {
+        cursor: grab;
+        &:active {
+            cursor: grabbing;
+        }
+    }
+}

@@ -1,0 +1,57 @@
+@import '../../variables';
+
+.side-nav {
+    padding-top: 10px;
+    width: 100%;
+    background-color: #F4F7FE;
+    ul.nav {
+        // margin: 0 1rem;
+        .nav-item {
+            padding: 0;
+            line-height: 2;
+            .nav-item-icon {
+                font-size: 1rem;
+                margin-right: 15px;
+            }
+            &.faded {
+                opacity: 0.3;
+            }
+        }
+        .nav-link {
+            cursor: pointer;
+            color: #212529;
+            padding: 15px 10px 15px 30px;
+            // border-radius: .25rem;
+            font-weight: 600;
+            transition-duration: .15s;
+            // margin-bottom: .3rem;
+            display: flex;
+            align-items: center;
+            &.child-nav-link {
+                padding-left: 3rem;
+                font-weight: normal;
+            }
+            &:hover {
+                background-color: #2592ff0a;
+            }
+        }
+        .nav-link.active {
+            // background-color: #{$sel-primary};
+            &>i {
+                color: #2692ff;
+            }
+            color: #2692FF;
+            background-color: white;
+            &:hover {
+                // background-color: #{$sel-primary};
+            }
+            // &.parent {
+            //     background-color: #{$sel-primary}1a;
+            //     color: #{$color-secondary};
+            //     &:hover {
+            //         background-color: #{$sel-primary}1a;
+            //     }
+            // }
+        }
+    }
+}

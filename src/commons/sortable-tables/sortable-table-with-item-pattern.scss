@@ -1,0 +1,27 @@
+.sortable-table-with-item-pattern {
+    .sort-column {
+        position: relative;
+        padding-right: 30px;
+        cursor: pointer;
+        &:before {
+            position: absolute;
+            right: 1em;
+            bottom: .75em;
+            content: "\21BF";
+            opacity: .3;
+        }
+        &:after {
+            position: absolute;
+            right: .5em;
+            bottom: .75em;
+            content: "\21C2";
+            opacity: .3;
+        }
+        &.ascending:before {
+            opacity: 1;
+        }
+        &.descending:after {
+            opacity: 1;
+        }
+    }
+}

@@ -1,0 +1,47 @@
+@import '../../../../variables';
+
+.notifications-menu {
+    .badge.count-info {
+        position: relative;
+        top: -9px;
+    }
+    .menu {
+        width: 30rem;
+        .dropdown-item {
+            cursor: pointer;
+            &:active {
+                background-color: #f8f9fa;
+                color: unset;
+            }
+            &:focus {
+                outline: none;
+            }
+        }
+        .notification {
+            &.unread {
+                background-color: #{$theme-gray};
+            }
+            .title {
+                margin-top: .5rem;
+                .title-text {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                .timestamp {
+                    padding-left: 5px;
+                }
+            }
+            .content {
+                margin-bottom: .5rem;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+        .no-notifications {
+            margin: 1rem 0;
+        }
+        .menu-footer, .menu-header {
+            padding: .25rem 1.5rem;
+        }
+    }
+}
