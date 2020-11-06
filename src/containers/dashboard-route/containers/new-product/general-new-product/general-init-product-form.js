@@ -1,4 +1,3 @@
-// import {EditorState, convertToRaw, convertFromRaw} from 'draft-js';
 import {safeRetrieve as sr} from '../../../../../utils/retrieve-value-utils';
 import {v4 as uuidv4} from 'uuid';
 
@@ -9,8 +8,10 @@ export function make_general_init_product_form() {
         original_price: '',
         sell_price: '',
         images: [],
-        draft__short_description: {},
-        draft__description: {},
+        short_description: '',
+        description: '',
+        html_short_description: '',
+        html_description: '',
         package_width: '',
         package_length: '',
         package_height: '',
@@ -40,18 +41,14 @@ export function make_empty_variation_value() {
 }
 
 export function make_general_publish_payload(general_product_after_sync) {
-    // general_product_after_sync.description = JSON.stringify(
-    //     convertToRaw(general_product_after_sync.draft__description.getCurrentContent())
-    // );
-    // general_product_after_sync.short_description = JSON.stringify(
-    //     convertToRaw(general_product_after_sync.draft__short_description.getCurrentContent())
-    // );
-    general_product_after_sync.description = JSON.stringify(general_product_after_sync.draft__description);
-    general_product_after_sync.short_description = JSON.stringify(general_product_after_sync.draft__short_description);
-    const general_product_payload = JSON.parse(JSON.stringify(general_product_after_sync));
+    general_product_after_sync.description = JSON.stringify(general_product_after_sync.description);
+    general_product_after_sync.short_description = general_product_after_sync.short_description;
+    // const general_product_payload = JSON.parse(JSON.stringify(general_product_after_sync));
+    const general_product_payload = general_product_after_sync;
+    // const general_product_payload = general_product_after_sync;
 
-    delete general_product_payload.draft__description;
-    delete general_product_payload.draft__short_description;
+    // delete general_product_payload.html_description;
+    // delete general_product_payload.html_short_description;
 
     return general_product_payload;
 }
@@ -63,8 +60,12 @@ export function from_db_make_general_init_product_form(from_db_general_product) 
         original_price: sr(from_db_general_product, ['original_price']),
         sell_price: sr(from_db_general_product, ['sell_price']),
         images: sr(from_db_general_product, ['images']),
-        draft__short_description: JSON.parse(sr(from_db_general_product, ['short_description'])),
-        draft__description: JSON.parse(sr(from_db_general_product, ['description'])),
+        // short_description: JSON.parse(sr(from_db_general_product, ['short_description'])),
+        // description: JSON.parse(sr(from_db_general_product, ['description'])),
+        short_description: sr(from_db_general_product, ['short_description']),
+        description: sr(from_db_general_product, ['description']) ? JSON.parse(sr(from_db_general_product, ['description'])): null,
+        html_short_description: sr(from_db_general_product, ['html_short_description']),
+        html_description: sr(from_db_general_product, ['html_description']),
         package_width: sr(from_db_general_product, ['package_width']),
         package_length: sr(from_db_general_product, ['package_length']),
         package_height: sr(from_db_general_product, ['package_height']),

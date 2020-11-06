@@ -1,4 +1,6 @@
 .tiki-new-product {
+    background-color: rgb(239, 239, 239);
+
     .additional-attributes {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -24,4 +26,117 @@
             }
         }
     }
+
+    .tiki-category-filter {
+        background-color: rgb(239, 239, 239);
+    }
+
+    .left {
+        width: 370px;
+    }
+
+    .main {
+        display: grid;
+
+        .left {
+            grid-row: 2 / 5;
+        }
+
+        .right {
+            grid-row: 3 / 5;
+
+            .name {
+                font-size: 24px;
+            }
+
+            .rating {
+                a:hover {
+                    text-decoration: none;
+                }
+            }
+
+            .price {
+                .sell_price {
+                    font-size: 32px;
+                }
+
+                .original_price {
+                    text-decoration: line-through;
+                }
+            }
+
+            // .quantity {
+            //     font-size: 15px;
+            // }
+        }
+
+        .delivery {
+            .address:first-child {
+                text-decoration: underline;
+                color: black;
+            }
+
+            .address:last-child {
+                &:hover {
+                    text-decoration: none;
+                }
+            }
+
+            .mb-3 {
+                font-size: 14px;
+            }
+
+            a {
+                font-size: 15px;
+            }
+        }
+
+        legend {
+            width:inherit; /* Or auto */
+            padding:0 10px; /* To give a bit of padding on the left and right */
+            border-bottom:none;
+        }
+
+        .buy {
+            display: grid;
+
+            button {
+                height: 48px;
+                grid-row: 3 / 5;
+            }
+
+            div {
+                grid-row: 2 / 5;
+            }
+        }
+    }
+
+    .right {
+        .shop {
+            a {
+                display: inline-grid;
+                &:hover {
+                    text-decoration: none;
+                }
+
+                b {
+                    color: black;
+                }
+            }
+        }
+
+        button.heart, button.share {
+            &:hover {
+                box-shadow: rgba(47, 83, 151, 0.1) 0px 2px 6px 0px;
+            }
+        }
+    }
+
+    .detail {
+        height: 535px;
+    }
+}
+
+.bg-light {
+    background-color: #f8f9fa !important;
 }

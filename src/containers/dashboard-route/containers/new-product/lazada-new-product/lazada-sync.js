@@ -1,5 +1,3 @@
-// import {convertToRaw} from 'draft-js';
-// import d2html from 'draftjs-to-html';
 import {set_value_by_path} from '../../../../../utils/set-object-value-by-path';
 import {safeRetrieve as sr} from '../../../../../utils/retrieve-value-utils';
 import moment from 'moment';
@@ -15,11 +13,11 @@ const lazada_sync_map = [
         transformer: gval => gval
     }, {
         lazada: ['Attributes', 'short_description'], 
-        general: ['draft__short_description'],
+        general: ['html_short_description'],
         transformer: gval => gval,
     }, {
         lazada: ['Attributes', 'description'], 
-        general: ['draft__description'], 
+        general: ['html_description'], 
         transformer: gval => gval,
     }, {
         lazada: ['Skus', '0', 'Sku'], 
@@ -27,10 +25,6 @@ const lazada_sync_map = [
         transformer: (gval, old_lval) => general_product_to_lazada_variations(old_lval, gval),
     },
 ]
-
-// function editorstate_to_html(general_editorstate) {
-//     return d2html(convertToRaw(general_editorstate.getCurrentContent()));
-// }
 
 export function general_product_to_lazada_variations(lazada_variations, general_product) {
     const {

@@ -302,14 +302,6 @@ export default class NewProduct extends Component {
                     </div>
                 </FormGroup>
                 <Nav tabs>
-                    {/* <NavItem>
-                        <NavLink
-                            className={classnames({active: current_active_tab === TABS.general})}
-                            onClick={() => {this.toggle_tab(TABS.general)}}
-                        >
-                            General
-                        </NavLink>
-                    </NavItem> */}
                     {
                         create_for.lazada
                             ? <NavItem>
@@ -348,20 +340,13 @@ export default class NewProduct extends Component {
                     }
                 </Nav>
                 <TabContent activeTab={current_active_tab}>
-                    {/* <TabPane tabId={TABS.general}>
-                        <GeneralNewProduct
-                            images_key={general_images_key}
-                            product={general_product}
-                            on_change={product => {this.handle_product_change('general_product', product)}}
-                            on_variations_change={this.handle_general_variations_change}
-                        />
-                    </TabPane> */}
                     {
                         create_for.lazada
                             ? <TabPane tabId={TABS.lazada} style={{'backgroundColor': '#eff0f5'}}>
                                 <LazadaNewProduct 
-                                    images_key={general_images_key}
+                                    // images_key={general_images_key}
                                     general_product={general_product}
+                                    images={sr(general_product, ['images'])}
                                     product={lazada_product} 
                                     additional_fields={lazada_additional_fields} 
                                     on_change_general={general_product => {this.handle_product_change('general_product', general_product)}}
@@ -373,10 +358,16 @@ export default class NewProduct extends Component {
                     }
                     {
                         create_for.tiki
-                            ? <TabPane tabId={TABS.tiki}>
+                            ? <TabPane tabId={TABS.tiki} style={{'backgroundColor': 'rgb(239, 239, 239)'}} >
                                 <TikiNewProduct
-                                    product={tiki_product} additional_fields={tiki_additional_fields}
+                                    // images_key={general_images_key}
+                                    general_product={general_product}
+                                    images={sr(general_product, ['images'])}
+                                    product={tiki_product} 
+                                    additional_fields={tiki_additional_fields}
+                                    on_change_general={general_product => {this.handle_product_change('general_product', general_product)}}
                                     on_change={product => {this.handle_product_change('tiki_product', product)}}
+                                    on_variations_change={this.handle_general_variations_change}
                                 />
                             </TabPane>
                             : null

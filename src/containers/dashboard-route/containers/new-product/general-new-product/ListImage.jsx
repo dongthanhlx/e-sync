@@ -16,39 +16,15 @@ class ListImage extends Component {
         this.setState({modal: !this.state.modal});
     };
 
-    handle_change_form = (path, value) => {
-        const {product, add_image, on_change_general, on_variations_change} = this.props;
-        const new_product = Object.assign({}, product);
-        let setter = new_product;
-    
-        for (let i = 0; i < path.length; i += 1) {
-            if (i === path.length - 1) {
-                setter[path[i]] = value;
-            } else {
-                setter[path[i]] = setter[path[i]] || {};
-            }
-            setter = setter[path[i]]
-        }
-        
-        add_image(value);
-        
-        on_change_general(new_product);
-        
-        if (path[0] === 'variation_attributes' || path[0] === 'variation_values') {
-            on_variations_change(new_product);
-        }
-    }
-
-    resetDropify() {
-        $('.input-dropify input').dropify();
-    }
-
     render() {
         const {
             buttonLabel,
             className,
+            on_change_general,
+            on_removed,
             product,
         } = this.props;
+        const images = product.images;
         const {modal} = this.state;
 
         return (
@@ -59,20 +35,20 @@ class ListImage extends Component {
                     <ModalBody>
                         <div>
                             <Dropify
-                                default_url={sr(product, ['images', product.images.length])}
-                                on_change_general={url => {this.handle_change_form(['images', product.images.length], url)}} 
-                                on_removed={() => {this.handle_change_form(['images', product.images.length], '')}} 
+                                // default_url={sr(product, ['images', product.images.length])}
+                                on_change_general={url => on_change_general(images.length, url)} 
+                                on_removed={() => on_removed(images.length)}
                             />
                         </div>
 
                         {
-                            Array.isArray(product.images) && product.images.length > 0 
-                                ? product.images.map((image, index) => (
+                            Array.isArray(images) && images.length > 0 
+                                ? images.map((image, index) => (
                                     <div key={index}>
                                         <Dropify
-                                            default_url={sr(product, ['images', index])}
-                                            on_change_general={url => {this.handle_change_form(['images', index], url)}} 
-                                            on_removed={() => {this.handle_change_form(['images', index], '')}} 
+                                            default_url={image}
+                                            on_change_general={url => on_change_general(index, url)}
+                                            on_removed={() => on_removed(index)}
                                         />
                                     </div>
                                 ))

@@ -36,6 +36,7 @@ export function make_lazada_init_product_form() {
 
 export function make_lazada_publish_payload(lazada_product_after_sync) {
     const lazada_product_payload = JSON.parse(JSON.stringify(lazada_product_after_sync));
+    // const lazada_product_payload = lazada_product_after_sync;
     const variations = lazada_product_payload.Skus[0].Sku;
     for (let va of variations) {
         delete va.id;

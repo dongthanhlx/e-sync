@@ -1,41 +1,61 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { object, string } from 'prop-types';
+import React, { createRef } from 'react';
 import EmailEditor from 'react-email-editor';
 import {upload_static} from '../../api/upload-static';
 import {noti} from '../../services/noti-service';
-import $ from 'jquery';
-import {v4 as uuid} from 'uuid';
-import { enabled } from 'store';
 
-const Editor = (props) => {
-    const emailEditorRef = useRef(null);
-    // const [design, setDesign] = useState(props.design);
-    const onLoad = () => {
-        console.log(props.design);
-        // if (!emailEditorRef.current) return;
+class Editor extends React.Component {
+    constructor(props) {
+        super(props);
 
-        if (!$.isEmptyObject(props.design)) {
-            emailEditorRef.current.editor.loadDesign(props.design);
+        this.emailEditorRef = createRef();
+        this.state = {
+            design: this.emailEditorRef.current,
+        }
+        
+        this.onLoad = this.onLoad.bind(this);
+    }
+
+    // componentDidMount () {
+    //     this.emailEditorRef = createRef();
+    //     this.setState({
+    //         design: this.emailEditorRef.current,
+    //     })
+    // }
+
+    // componentWillUnmount() {
+    //     this.emailEditorRef = createRef();
+    //     this.setState({
+    //         design: {},
+    //     })
+    // }
+
+    onLoad () {
+        const unlayer = this.emailEditorRef.current.editor;
+        const {type, design, on_change_general, on_change_html_general} = this.props;
+
+        if (type === 'legacy') {
+            unlayer.loadDesign({
+                html: design ? design: '<html><body></body></html>',
+                classic: true,
+            });
+        } else {
+            design && unlayer.loadDesign(design)
         }
 
-        emailEditorRef.current.editor.addEventListener('design:updated', (data) => {
-            emailEditorRef.current.editor.exportHtml(function (data) {
-                props.on_change_general(data.design);
+        unlayer.addEventListener('design:updated', (data) => {
+            unlayer.exportHtml(function (data) {
+                if (type === 'legacy') {
+                    on_change_general(data.html);
+                } else {
+                    on_change_general(data.design);
+                }
+
+                on_change_html_general(data.html);
             })
         });
 
-        emailEditorRef.current.editor.registerProvider('userUploads', function (params, done) {
-            const page = params.page || 1;
-            const perPage = params.perPage || 20;
-            const total = 100;
-            const hasMore = total > page * perPage;
-          
-            // Load images from your database here...
-            const images = [];
-          
-            done(images, { hasMore, page, perPage, total });
-          });
-
-        emailEditorRef.current.editor.registerCallback('image', async function (file, done) {
+        unlayer.registerCallback('image', async function (file, done) {
             try {
                 const file_url = await upload_static(file.accepted[0]);
                 done({progress: 100, url: file_url});
@@ -44,16 +64,19 @@ const Editor = (props) => {
                 noti('error', 'Unlayer cannot upload file');
             }
         })
-    };
+    }
 
-    return (
-        <div>
-            <EmailEditor
-                ref={emailEditorRef}
-                onLoad={onLoad}
-            />
-        </div>
-    );
-};
+    render () {
+        return (
+            <div >
+                <EmailEditor
+                    ref={this.emailEditorRef}
+                    onLoad={this.onLoad}
+                    projectId='1071'
+                />
+            </div>
+        )
+    }
+}
 
 export default Editor;

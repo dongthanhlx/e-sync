@@ -25,6 +25,7 @@ export default class Dropify extends Component {
                 noti('error', 'Dropify cannot upload file');
             }
         });
+        
         dropify.on('dropify.afterClear', function() {
             on_removed();
         });
@@ -37,7 +38,6 @@ export default class Dropify extends Component {
             <input id={`dropify_${this.id}`} type="file" {...(default_url ? {'data-default-file': default_url} : {})} />
         )
     }
-
 }
 
 Dropify.propTypes = {

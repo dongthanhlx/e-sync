@@ -69,6 +69,7 @@ export default class MyProducts extends Component {
 
     render() {
         const {products, selected_product, is_open_detail_modal} = this.state;
+        console.log(products);
         return (
             <MainContent className="my-products">
                 <Link to="/dashboard/new-product">
@@ -96,7 +97,6 @@ export default class MyProducts extends Component {
             </MainContent>
         )
     }
-
 }
 
 function MyProductsTableItem({item, index, on_show_detail, on_delete}) {
@@ -104,7 +104,7 @@ function MyProductsTableItem({item, index, on_show_detail, on_delete}) {
         <tr>
             <td>{index + 1}</td>
             <td><ThumbnailImage src={item.image} /></td>
-            <td>{item.name}</td>
+            <td><button className="btn" onClick={e => {on_show_detail(item)}}>{item.name}</button></td>
             <td>
                 {
                     item.lock_content
@@ -114,19 +114,16 @@ function MyProductsTableItem({item, index, on_show_detail, on_delete}) {
             </td>
             <td>
                 {
-                    item.statuses.map(status => <ProductStatus key={status.status_on} status={status} />)
+                    item.statuses.map(status => <ProductStatus key={status.status_on} status={status} name={item.name}/>)
                 }
             </td>
             <td>
-                <Button outline size="sm" onClick={e => {on_show_detail(item)}}>
-                    <i className="fa fa-eye" />
-                </Button>
                 <Link to={`/dashboard/my-products/edit-product?${stringify({product_id: item._id})}`}>
                     <Button size="sm" className="ml-1">
                         <i className="fa fa-edit" />
                     </Button>
                 </Link>
-                <Button outline color="danger" size="sm" className="ml-3" onClick={e => {on_delete(item)}}>
+                <Button outline color="danger" size="sm" className="ml-2" onClick={e => {on_delete(item)}}>
                     <i className="fa fa-trash-alt" />
                 </Button>
             </td>
@@ -134,27 +131,50 @@ function MyProductsTableItem({item, index, on_show_detail, on_delete}) {
     );
 }
 
-function ProductStatus({status}) {
+function ProductStatus({status, name}) {
+    const border_color = status.error ? 'border-danger': 'border-info';
+    const a_class = `rounded border px-1 text-center ${border_color}`
+    const name_to_slug = string_to_slug(name);
+    const item_id = status.item_id;
+    const lazada_link = 'https://www.lazada.vn/products/' + name_to_slug + `-i${item_id}.html`;
     return {
-        'Lazada': <div className="product-status">
-            <span className="status-on">{status.status_on}</span>
+        'Lazada': <div className="product-status my-1">
+            <a target='_blank' rel='external' href={lazada_link} className={a_class}><span className="status-on">{status.status_on}</span></a>
             {status.error ? <Badge color="danger" className="error">Error</Badge> : <Badge color="light" className="error">No error</Badge>}
             {status.sync_status ? <Badge color={SYNC_STATUS_COLOR[status.sync_status]}>{status.sync_status}</Badge> : null}
             {status.qc_status ? <Badge color={LAZADA_QC_STATUS_COLOR[status.qc_status]}>{status.qc_status}</Badge> : null}
             {status.product_status ? <Badge color={LAZADA_PRODUCT_STATUS_COLOR[status.product_status]}>{status.product_status}</Badge> : null}
         </div>,
-        'Tiki': <div className="product-status">
+        'Tiki': <div className="product-status my-1">
             <span className="status-on">{status.status_on}</span>
             {status.error ? <Badge color="danger" className="error">Error</Badge> : <Badge color="light" className="error">No error</Badge>}
             {status.sync_status ? <Badge color={SYNC_STATUS_COLOR[status.sync_status]}>{status.sync_status}</Badge> : null}
             {status.request_status ? <Badge color={TIKI_PRODUCT_REQUEST_STATUS_COLOR[status.request_status]}>{status.request_status}</Badge> : null}
             {status.product_status ? <Badge color="light">{status.product_status}</Badge> : null}
         </div>,
-        'Shopee': <div className="product-status">
+        'Shopee': <div className="product-status my-1">
             <span className="status-on">{status.status_on}</span>
             {status.error ? <Badge color="danger" className="error">Error</Badge> : <Badge color="light" className="error">No error</Badge>}
             {status.sync_status ? <Badge color={SYNC_STATUS_COLOR[status.sync_status]}>{status.sync_status}</Badge> : null}
             {status.product_status ? <Badge color={SHOPEE_PRODUCT_STATUS_COLOR[status.product_status]}>{status.product_status}</Badge> : null}
         </div>,
     }[status.status_on] || null;
+}
+
+function string_to_slug (str) {
+    str = str.replace(/^\s+|\s+$/g, ''); // trim
+    str = str.toLowerCase();
+  
+    // remove accents, swap ñ for n, etc
+    var from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;";
+    var to   = "aaaaeeeeiiiioooouuuunc------";
+    for (var i=0, l=from.length ; i<l ; i++) {
+        str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+    }
+
+    str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+        .replace(/\s+/g, '-') // collapse whitespace and replace by -
+        .replace(/-+/g, '-'); // collapse dashes
+
+    return str;
 }

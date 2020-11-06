@@ -203,7 +203,6 @@ export default class EditProduct extends Component {
         try {
             const {product_id} = parse(this.props.location.search);
             const product = await get_one_product(product_id);
-            console.log(product);
             const create_for = {lazada: false, tiki: false, shopee: false};
             for (let platform of product.create_for) {
                 create_for[platform] = true;
@@ -468,6 +467,7 @@ export default class EditProduct extends Component {
                                     editor_remount_key_2={editorRemountKey2}
                                     images_key={general_images_key}
                                     brand_name={sr(general_product, ['brand'])}
+                                    images={sr(general_product, ['images'])}
                                     general_product={general_product}
                                     product={lazada_product} 
                                     additional_fields={lazada_additional_fields} 
@@ -482,8 +482,14 @@ export default class EditProduct extends Component {
                         create_for.tiki
                             ? <TabPane tabId={TABS.tiki}>
                                 <TikiNewProduct
-                                    product={tiki_product} additional_fields={tiki_additional_fields}
+                                    editmode
+                                    images_key={general_images_key}
+                                    general_product={general_product}
+                                    product={tiki_product} 
+                                    additional_fields={tiki_additional_fields}
+                                    on_change_general={general_product => {this.handle_product_change('general_product', general_product)}}
                                     on_change={product => {this.handle_product_change('tiki_product', product)}}
+                                    on_variations_change={this.handle_general_variations_change}
                                 />
                             </TabPane>
                             : null

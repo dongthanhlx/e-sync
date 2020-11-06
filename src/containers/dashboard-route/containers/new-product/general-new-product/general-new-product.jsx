@@ -2,8 +2,6 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {FormGroup, Label, Input, Button} from 'reactstrap';
 import {Editor} from 'react-draft-wysiwyg';
-// import {EditorState, convertToRaw} from 'draft-js';
-// import d2html from 'draftjs-to-html';
 import {safeRetrieve as sr} from '../../../../../utils/retrieve-value-utils';
 import {noti} from '../../../../../services/noti-service';
 import Dropify from '../../../../../commons/dropify/dropify';
@@ -320,7 +318,6 @@ export default class GeneralNewProduct extends Component {
             </div>
         )
     }
-
 }
 
 GeneralNewProduct.propTypes = {
