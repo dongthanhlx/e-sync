@@ -1,4 +1,3 @@
-import { object, string } from 'prop-types';
 import React, { createRef } from 'react';
 import EmailEditor from 'react-email-editor';
 import {upload_static} from '../../api/upload-static';
@@ -7,31 +6,32 @@ import {noti} from '../../services/noti-service';
 class Editor extends React.Component {
     constructor(props) {
         super(props);
-
+        this.timer = null;
         this.emailEditorRef = createRef();
-        this.state = {
-            design: this.emailEditorRef.current,
-        }
-        
+        // debugger;
         this.onLoad = this.onLoad.bind(this);
     }
 
-    // componentDidMount () {
-    //     this.emailEditorRef = createRef();
-    //     this.setState({
-    //         design: this.emailEditorRef.current,
-    //     })
+    componentDidUpdate(prev_props) {
+        if (prev_props.design !== this.props.design) this.onLoad();
+    }
+
+    // componentDidMount() {
+    //     this._mounted = true;
     // }
 
-    // componentWillUnmount() {
-    //     this.emailEditorRef = createRef();
-    //     this.setState({
-    //         design: {},
-    //     })
-    // }
+    componentWillUnmount() {
+        // this._mounted = false;
+        // if (this.timer) {
+        //     clearTimeout(this.load);
+        // }
+        clearTimeout(this.timer);
+    }
 
-    onLoad () {
+    load() {
         const unlayer = this.emailEditorRef.current.editor;
+        // if (!unlayer)
+        // debugger;
         const {type, design, on_change_general, on_change_html_general} = this.props;
 
         if (type === 'legacy') {
@@ -64,6 +64,14 @@ class Editor extends React.Component {
                 noti('error', 'Unlayer cannot upload file');
             }
         })
+    }
+
+    onLoad () {
+        // if (this._mounted) {
+            this.timer = setTimeout(() => {
+                this.load()
+            }, 0);
+        // }
     }
 
     render () {

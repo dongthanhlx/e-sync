@@ -1,5 +1,3 @@
-// import {convertToRaw} from 'draft-js';
-// import d2html from 'draftjs-to-html';
 import {set_value_by_path} from '../../../../../utils/set-object-value-by-path';
 import {safeRetrieve as sr} from '../../../../../utils/retrieve-value-utils';
 
@@ -26,11 +24,11 @@ const tiki_sync_map = [
         transformer: gval => gval.filter(url => url)[0]
     }, {
         tiki: ['attributes', 'product_top_features'], 
-        general: ['draft__short_description'],
+        general: ['html__short_description'],
         transformer: gval => gval,
     }, {
         tiki: ['description'], 
-        general: ['draft__description'],
+        general: ['html__description'],
         transformer: gval => gval,
     }, {
         tiki: ['attributes', 'product_width'], 

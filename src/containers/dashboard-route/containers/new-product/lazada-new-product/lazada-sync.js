@@ -13,11 +13,11 @@ const lazada_sync_map = [
         transformer: gval => gval
     }, {
         lazada: ['Attributes', 'short_description'], 
-        general: ['html_short_description'],
+        general: ['html__short_description'],
         transformer: gval => gval,
     }, {
         lazada: ['Attributes', 'description'], 
-        general: ['html_description'], 
+        general: ['html__description'], 
         transformer: gval => gval,
     }, {
         lazada: ['Skus', '0', 'Sku'], 

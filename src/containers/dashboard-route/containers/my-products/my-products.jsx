@@ -69,7 +69,6 @@ export default class MyProducts extends Component {
 
     render() {
         const {products, selected_product, is_open_detail_modal} = this.state;
-        console.log(products);
         return (
             <MainContent className="my-products">
                 <Link to="/dashboard/new-product">
@@ -131,22 +130,34 @@ function MyProductsTableItem({item, index, on_show_detail, on_delete}) {
     );
 }
 
+function renderLink(status, name) {
+    const page = status.status_on;
+    const name_to_slug = string_to_slug(name);
+    if (page === 'Lazada') {
+        const item_id = status.item_id;
+        return `https://www.lazada.vn/products/${name_to_slug}-i${item_id}.html`;
+    }
+
+    if (page === 'Tiki') {
+        const product_id = status.product_id;
+        return `https://tiki.vn/${name_to_slug}-p${product_id}.html`
+    }
+}
+
 function ProductStatus({status, name}) {
     const border_color = status.error ? 'border-danger': 'border-info';
-    const a_class = `rounded border px-1 text-center ${border_color}`
-    const name_to_slug = string_to_slug(name);
-    const item_id = status.item_id;
-    const lazada_link = 'https://www.lazada.vn/products/' + name_to_slug + `-i${item_id}.html`;
+    const a_class = `rounded border px-1 text-center mr-1 ${border_color}`
+
     return {
         'Lazada': <div className="product-status my-1">
-            <a target='_blank' rel='external' href={lazada_link} className={a_class}><span className="status-on">{status.status_on}</span></a>
+            <a target='_blank' rel='external' href={renderLink(status, name)} className={a_class}><span className="status-on">{status.status_on}</span></a>
             {status.error ? <Badge color="danger" className="error">Error</Badge> : <Badge color="light" className="error">No error</Badge>}
             {status.sync_status ? <Badge color={SYNC_STATUS_COLOR[status.sync_status]}>{status.sync_status}</Badge> : null}
             {status.qc_status ? <Badge color={LAZADA_QC_STATUS_COLOR[status.qc_status]}>{status.qc_status}</Badge> : null}
             {status.product_status ? <Badge color={LAZADA_PRODUCT_STATUS_COLOR[status.product_status]}>{status.product_status}</Badge> : null}
         </div>,
         'Tiki': <div className="product-status my-1">
-            <span className="status-on">{status.status_on}</span>
+            <a target='_blank' rel='external' href={renderLink(status, name)} className={a_class}><span className="status-on">{status.status_on}</span></a>
             {status.error ? <Badge color="danger" className="error">Error</Badge> : <Badge color="light" className="error">No error</Badge>}
             {status.sync_status ? <Badge color={SYNC_STATUS_COLOR[status.sync_status]}>{status.sync_status}</Badge> : null}
             {status.request_status ? <Badge color={TIKI_PRODUCT_REQUEST_STATUS_COLOR[status.request_status]}>{status.request_status}</Badge> : null}

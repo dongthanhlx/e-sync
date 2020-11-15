@@ -52,6 +52,8 @@ export default class TikiNewProduct extends Component {
             slider_for_key: uuidv4(),
             slider_nav_key: uuidv4(),
         };
+
+        this.updateSlider = this.updateSlider.bind(this);
     }
 
     componentDidMount() {
@@ -76,14 +78,63 @@ export default class TikiNewProduct extends Component {
         });
     }
 
+    componentDidUpdate(prev_props) {
+        TikiNewProduct.re_align_variations_table(this.props.product.option_attributes);
+
+        $('.slider-for').not('.slick-initialized').slick({
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            arrows: false,
+            fade: true,
+            asNavFor: '.slider-nav'
+        });
+
+        $('.slider-nav').not('.slick-initialized').slick({
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            asNavFor: '.slider-for',
+            arrows: false,
+            centerMode: true,
+            focusOnSelect: true
+        });
+        
+        if (prev_props.general_product.images.length !== this.props.general_product.images.length) {
+            this.updateSlider(prev_props.general_product.images, this.props.general_product.images);
+        }
+    }
+
+    removeSlide(index) {
+        $('.slider-for').slick('slickRemove', index);
+        $('.slider-nav').slick('slickRemove', index);
+    }
+
+    removeAll(images) {
+        const length = images.length;
+        console.log(length);
+        if (length === 0) return;
+        images.map((image, index) => this.removeSlide(length - index - 1))
+    }
+
+    addSlide(url) {
+        $('.slider-for').slick('slickAdd', `<div><img src='${url}' /></div>`);
+        $('.slider-nav').slick('slickAdd', `<div><img src='${url}' /></div>`);
+    }
+
+    addAll(images) {
+        console.log(images.length);
+        if (images.length === 0) return;
+        images.map(image => this.addSlide(image))
+    }
+
+    updateSlider(oldImages, newImages) {
+        this.removeAll(oldImages);
+        this.addAll(newImages);
+    }
+
     componentWillUnmount() {
         this.setState({
             category_tree: []
         })
-    }
-
-    componentDidUpdate(prev_props) {
-        TikiNewProduct.re_align_variations_table(this.props.product.option_attributes);
     }
 
     get_variation_table_titles() {
@@ -132,13 +183,15 @@ export default class TikiNewProduct extends Component {
         on_change_general(new_product);
     }
 
-    addSlide(url) {
-        $('.slider-for').slick('slickAdd', `<div><img src=${url} /></div>`);
-        $('.slider-nav').slick('slickAdd', `<div><img src=${url} /></div>`);
-    }
-
     render() {
-        const {product, additional_fields, general_product} = this.props;
+        console.log('------------ render tiki -----------');
+        const {
+            product, 
+            additional_fields, 
+            general_product,
+            editorKey,
+        } = this.props;
+        const images = sr(this.props.general_product, ['images']);
         const {category_tree} = this.state;
         return (
             <div className="tiki-new-product container px-0">
@@ -156,23 +209,14 @@ export default class TikiNewProduct extends Component {
 
                 <div className="main px-2 bg-white">
                     <div className="left">
-                        <div className="slider-for" key={this.state.slider_for_key}>
-                            {
-                                sr(this.props.general_product, ['images']).map(image => (
-                                    this.addSlide(image)
-                                ))
-                            }
-                        </div>
+                        <div className="slider-for"></div>
 
-                        <div className="slider-nav" key={this.state.slider_nav_key}></div>
+                        <div className="slider-nav"></div>
 
                         <ListImage 
                             buttonLabel='Edit Image'
                             product={general_product}
-                            add_image={url => this.addSlide(url)}
-                            on_change_general={product => {this.props.on_change_general(product)}} 
-                            on_removed={product => {this.props.on_removed(product)}} 
-                            on_variations_change={product => {this.props.on_variations_change(product)}} 
+                            on_change_general={(images) => {this.handle_change_general_form(['images'], images)}} 
                         />
                     </div>
 
@@ -358,40 +402,42 @@ export default class TikiNewProduct extends Component {
                 <div className="detail w-75 overflow-auto mt-5">
                     <h5>THÔNG TIN CHI TIẾT</h5>
 
-                    <Table striped hover className='bg-white'>
-                            {
-                                Array.isArray(additional_fields) && additional_fields.length > 0
-                                    // ? <div className="mb-5 additional-attributes">
-                                    // ? <div className="mb-5">
-                                        ? 
-                                    <tbody>
-                                        {
-                                            additional_fields.sort((a, b) => parseInt(b.is_required) - parseInt(a.is_required)).map(field => (
-                                                <tr key={field.id}>
-                                                    {/* <FormGroup key={field.id}> */}
-                                                    <td className='px-3 py-2'>
-                                                        <Label for={`tp_${field.code}`} className={field.is_required ? 'required-field m-0' : 'm-0'}>
-                                                            {snake_to_title(field.code)}
-                                                        </Label>
-                                                    </td>
-                                                    
-                                                    <td className='px-3 py-2'>
-                                                        <Input 
-                                                            type="text" id={`tp_${field.code}`} 
-                                                            placeholder={field.example ? `Example: ${field.example}` : ''}
-                                                            value={sr(product, TikiNewProduct.make_attribute_path(field)) || ''}
-                                                            onChange={e => {this.handle_change_form(TikiNewProduct.make_attribute_path(field), e.target.value)}} 
-                                                        />
-                                                    </td>
-                                                {/* </FormGroup> */}
-                                                </tr>
-                                            ))
-                                        }
-                                    </tbody>
-                                    // </div>
-                                    : null
-                            }
-                    </Table>
+                    <div className='overflow-auto table-wrapper'>
+                        <Table striped hover className='bg-white'>
+                                {
+                                    Array.isArray(additional_fields) && additional_fields.length > 0
+                                        // ? <div className="mb-5 additional-attributes">
+                                        // ? <div className="mb-5">
+                                            ? 
+                                        <tbody>
+                                            {
+                                                additional_fields.sort((a, b) => parseInt(b.is_required) - parseInt(a.is_required)).map(field => (
+                                                    <tr key={field.id}>
+                                                        {/* <FormGroup key={field.id}> */}
+                                                        <td className='px-3 py-2'>
+                                                            <Label for={`tp_${field.code}`} className={field.is_required ? 'required-field m-0' : 'm-0'}>
+                                                                {snake_to_title(field.code)}
+                                                            </Label>
+                                                        </td>
+                                                        
+                                                        <td className='px-3 py-2'>
+                                                            <Input 
+                                                                type="text" id={`tp_${field.code}`} 
+                                                                placeholder={field.example ? `Example: ${field.example}` : ''}
+                                                                value={sr(product, TikiNewProduct.make_attribute_path(field)) || ''}
+                                                                onChange={e => {this.handle_change_form(TikiNewProduct.make_attribute_path(field), e.target.value)}} 
+                                                            />
+                                                        </td>
+                                                    {/* </FormGroup> */}
+                                                    </tr>
+                                                ))
+                                            }
+                                        </tbody>
+                                        // </div>
+                                        : null
+                                }
+                        </Table>
+                    </div>
                 </div>
 
                 <div className="description mt-5">
@@ -399,11 +445,66 @@ export default class TikiNewProduct extends Component {
 
                     <FormGroup className="mb-5 bg-white">
                         <Editor
+                            key={editorKey}
                             design={sr(general_product, ['description'])}
                             on_change_general={description => {this.handle_change_general_form(['description'], description)}}
-                            on_change_html_general={description => {this.handle_change_general_form(['html_description'], description)}}
+                            on_change_html_general={description => {this.handle_change_general_form(['html__description'], description)}}
                         />
                     </FormGroup>
+                </div>
+
+                <div className="mb-5 tiki-variations-table">
+                    <div className="tr">
+                        {
+                            this.get_variation_table_titles().map(title => (
+                                <div key={title} className="th">{title}</div>
+                            ))
+                        }
+                    </div>
+                    {
+                        product.variants.map((variant, index) => (
+                            <div key={variant.id} className="tr">
+                                <div className="td">
+                                    {variant.sku}
+                                </div>
+                                {
+                                    sr(product, ['option_attributes', 0])
+                                        ? <div className="td">
+                                            {sr(variant, ['option1'])}
+                                        </div>
+                                        : null
+                                }
+                                {
+                                    sr(product, ['option_attributes', 1])
+                                        ? <div className="td">
+                                            {sr(variant, ['option2'])}
+                                        </div>
+                                        : null
+                                }
+                                <div className="td">
+                                    <SelectInput
+                                        items={TIKI_INVENTORY_TYPES}
+                                        itemIdGen={o => o.value}
+                                        itemLabelGen={o => o.label}
+                                        value={
+                                            sr(variant, ['inventory_type']) 
+                                                ? TIKI_INVENTORY_TYPES.find(type => type.value === variant.inventory_type) || {}
+                                                : {}
+                                        }
+                                        onSelect={type => {this.handle_change_form(['variants', index, 'inventory_type'], type.value)}}
+                                        onCancel={() => {this.handle_change_form(['variants', index, 'inventory_type'], '')}}
+                                    />
+                                </div>
+                                <div className="td">
+                                    <Input 
+                                        type="text" 
+                                        value={sr(variant, ['supplier']) || ''}
+                                        onChange={e => {this.handle_change_form(['variants', index, 'supplier'], e.target.value)}} 
+                                    />
+                                </div>
+                            </div>
+                        ))
+                    }
                 </div>
             </div>
         )

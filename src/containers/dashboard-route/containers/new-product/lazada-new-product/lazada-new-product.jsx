@@ -52,15 +52,13 @@ export default class LazadaNewProduct extends Component {
         this.state = {
             category_tree: [],
             brands: [],
-            slider_for_key: uuidv4(),
-            slider_nav_key: uuidv4(),
-            numOfImage: 0,
         };
 
         this.query_brand = null;
         this.handle_html_image_upload = this.handle_html_image_upload.bind(this);
         this.handle_change_form = this.handle_change_form.bind(this);
         this.handle_change_general_form = this.handle_change_general_form.bind(this);
+        this.updateSlider = this.updateSlider.bind(this);
     }
 
     componentDidMount() {
@@ -69,7 +67,7 @@ export default class LazadaNewProduct extends Component {
             this.api_get_lazada_brands(this.props.brand_name);
         }
 
-        $('.slider-for').slick({
+        $('.slider-for').not('.slick-initialized').slick({
             slidesToShow: 1,
             slidesToScroll: 1,
             arrows: false,
@@ -77,7 +75,7 @@ export default class LazadaNewProduct extends Component {
             asNavFor: '.slider-nav'
         });
 
-        $('.slider-nav').slick({
+        $('.slider-nav').not('.slick-initialized').slick({
             slidesToShow: 3,
             slidesToScroll: 1,
             asNavFor: '.slider-for',
@@ -87,25 +85,42 @@ export default class LazadaNewProduct extends Component {
         });
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        console.log(nextProps);
-        console.log(this.props);
-        return true;
-    }
-
     componentDidUpdate(prev_props) {
         if (prev_props.brand_name !== this.props.brand_name) {
             this.api_get_lazada_brands(this.props.brand_name);
         }
-        
-        if (this.props.images && (prev_props.images.length !== this.props.images.length)) {
-            this.setState({
-                slider_for_key: uuidv4(),
-                slider_nav_key: uuidv4(),
-            })
+
+        if (prev_props.general_product.images.length !== this.props.general_product.images.length) {
+            this.updateSlider(prev_props.general_product.images, this.props.general_product.images);
         }
     }
-    
+
+    removeSlide(index) {
+        $('.slider-for').slick('slickRemove', index);
+        $('.slider-nav').slick('slickRemove', index);
+    }
+
+    removeAll(images) {
+        const length = images.length;
+        if (length === 0) return;
+        images.map((image, index) => this.removeSlide(length - index - 1))
+    }
+
+    addSlide(url) {
+        $('.slider-for').slick('slickAdd', `<div><img src='${url}' /></div>`);
+        $('.slider-nav').slick('slickAdd', `<div><img src='${url}' /></div>`);
+    }
+
+    addAll(images) {
+        if (images.length === 0) return;
+        images.map(image => this.addSlide(image));
+    }
+
+    updateSlider(oldImages, newImages) {
+        this.removeAll(oldImages);
+        this.addAll(newImages);
+    }
+
     get_variation_table_titles() {
         const {general_product} = this.props;
         const fixed_titles_1 = ['Seller SKU', 'Quantity', 'Original price', 'Sell price']
@@ -180,27 +195,22 @@ export default class LazadaNewProduct extends Component {
         on_change_general(new_product);
     }
 
-    initSlider() {
-        $('.slider-for').empty();
-        $('.slider-nav').empty();
-    }
-
-    addSlide(url) {
-        $('.slider-for').slick('slickAdd', `<div><img src=${url} key='${url}-for'/></div>`);
-        $('.slider-nav').slick('slickAdd', `<div><img src=${url} key='${url}-nav'/></div>`);
-    }
-
     render() {
+        console.log('------------ render lazada -----------');
         const {
-            product, additional_fields, editmode, images_key, general_product, 
-            editor_remount_key_1, 
-            editor_remount_key_2,
+            product, 
+            additional_fields, 
+            editmode, 
+            images_key, 
+            general_product, 
+            activeTab,
+            editorKey,
         } = this.props;
+        const images = sr(general_product, ['images']);
         const {category_tree, brands} = this.state;
         const normal_fields = additional_fields.filter(f => f.attribute_type === 'normal');
         const sku_fields = additional_fields.filter(f => f.attribute_type === 'sku');
         const variations = product.Skus[0].Sku;
-        console.log(general_product);
         return (
             <div className="lazada-new-product container px-0">
                 <FormGroup className="mb-0">
@@ -217,22 +227,14 @@ export default class LazadaNewProduct extends Component {
                 
                 <Row className='bg-white mx-0'>
                     <Col className='left'>
-                        <div className="slider-for">
-                            {
-                                sr(general_product, ['images']).map(image => (
-                                    this.addSlide(image)
-                                ))
-                            }
-                        </div>
+                        <div className="slider-for"></div>
 
                         <div className="slider-nav"></div>
 
                         <ListImage 
-                            // key={images_key}
                             buttonLabel='Edit Image'
                             product={general_product}
-                            on_change_general={(index, url) => {this.handle_change_general_form(['images', index], url)}} 
-                            on_removed={(index) => {this.handle_change_general_form(['images', index], '')}} 
+                            on_change_general={(images) => {this.handle_change_general_form(['images'], images)}} 
                         />
                     </Col>
 
@@ -240,9 +242,9 @@ export default class LazadaNewProduct extends Component {
                         <div className='border-bottom'>
                             <FormGroup>
                                 <Input 
-                                    type="textarea" id="gp_name" 
+                                    type="textarea" id="gp_name"
                                     value={sr(general_product, ['name'])}
-                                    onChange={e => {this.handle_change_general_form(['name'], e.target.value)}} 
+                                    onChange={e => {this.handle_change_general_form(['name'], e.target.value)}}
                                     placeholder='Tên sản phẩm'
                                 />
                             </FormGroup>
@@ -432,22 +434,21 @@ export default class LazadaNewProduct extends Component {
 
                     <FormGroup>
                         <Editor
-                            key={editor_remount_key_1}
                             // key='1'
                             type='legacy'
                             design={sr(general_product, ['short_description'])}
                             on_change_general={description => {this.handle_change_general_form(['short_description'], description)}}
-                            on_change_html_general={description => {this.handle_change_general_form(['html_short_description'], description)}}
+                            on_change_html_general={description => {this.handle_change_general_form(['html__short_description'], description)}}
                         />
                     </FormGroup>
 
                     <FormGroup className="mb-5">
                         <Editor
-                            key={editor_remount_key_2}
+                            key={editorKey}
                             // key='2'
                             design={sr(general_product, ['description'])}
                             on_change_general={description => {this.handle_change_general_form(['description'], description)}}
-                            on_change_html_general={description => {this.handle_change_general_form(['html_description'], description)}}
+                            on_change_html_general={description => {this.handle_change_general_form(['html__description'], description)}}
                         />
                     </FormGroup>
                 </div>

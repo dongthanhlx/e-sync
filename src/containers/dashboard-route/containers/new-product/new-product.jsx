@@ -28,6 +28,7 @@ import Image from '../../../../commons/image/image';
 import logo_lazada from '../../../../assets/images/normal-use/logo-lazada.png';
 import logo_tiki from '../../../../assets/images/normal-use/logo-tiki.png';
 import logo_shopee from '../../../../assets/images/normal-use/logo-shopee.png';
+import withTabPaneActiveState from '../../../../commons/with-tab-pane-active-state/with-tab-pane-active-state';
 
 const TABS = {
     general: 'general',
@@ -56,6 +57,9 @@ export default class NewProduct extends Component {
 
             shopee_additional_fields: [],
             shopee_product: make_shopee_init_product_form(),
+
+            lazadaEditorKey: uuidv4(),
+            tikiEditorKey: uuidv4(),
         };
         this.handle_general_variations_change = this.handle_general_variations_change.bind(this);
         this.handle_publish = this.handle_publish.bind(this);
@@ -182,6 +186,16 @@ export default class NewProduct extends Component {
     }
 
     toggle_tab(current_active_tab) {
+        switch (current_active_tab) {
+            case TABS.lazada:
+                this.setState({lazadaEditorKey: uuidv4()});
+                break;
+            case TABS.tiki:
+                this.setState({tikiEditorKey: uuidv4()});
+                break;
+            default:
+                break;
+        }
         this.setState({current_active_tab});
     }
 
@@ -274,6 +288,7 @@ export default class NewProduct extends Component {
             lazada_additional_fields, lazada_product,
             tiki_additional_fields, tiki_product,
             shopee_additional_fields, shopee_product,
+            lazadaEditorKey, tikiEditorKey,
         } = this.state;
         const {is_first, is_last} = this.is_current_special_tab();
         return (
@@ -345,8 +360,9 @@ export default class NewProduct extends Component {
                             ? <TabPane tabId={TABS.lazada} style={{'backgroundColor': '#eff0f5'}}>
                                 <LazadaNewProduct 
                                     // images_key={general_images_key}
+                                    editorKey={lazadaEditorKey}
+                                    activeTab={current_active_tab}
                                     general_product={general_product}
-                                    images={sr(general_product, ['images'])}
                                     product={lazada_product} 
                                     additional_fields={lazada_additional_fields} 
                                     on_change_general={general_product => {this.handle_product_change('general_product', general_product)}}
@@ -361,8 +377,9 @@ export default class NewProduct extends Component {
                             ? <TabPane tabId={TABS.tiki} style={{'backgroundColor': 'rgb(239, 239, 239)'}} >
                                 <TikiNewProduct
                                     // images_key={general_images_key}
+                                    editorKey={tikiEditorKey}
+                                    activeTab={current_active_tab}
                                     general_product={general_product}
-                                    images={sr(general_product, ['images'])}
                                     product={tiki_product} 
                                     additional_fields={tiki_additional_fields}
                                     on_change_general={general_product => {this.handle_product_change('general_product', general_product)}}

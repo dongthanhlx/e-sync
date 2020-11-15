@@ -133,7 +133,9 @@
     }
 
     .detail {
-        height: 535px;
+        .table-wrapper {
+            height: 535px;
+        }
     }
 }
 

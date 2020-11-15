@@ -67,7 +67,7 @@ export default class EditProduct extends Component {
         this.state = {
             product_id: '',
 
-            current_active_tab: TABS.lazada,
+            current_active_tab: TABS.tiki,
             create_for: {lazada: true, tiki: true, shopee: true},
             publishing: false,
 
@@ -190,12 +190,6 @@ export default class EditProduct extends Component {
             } else {
                 this.setState({shopee_product: make_shopee_init_product_form(), shopee_additional_fields: []});
             }
-        }
-        if (sr(prev_state, ['general_product']) !== sr(this.state, ['general_product'])) {
-            this.setState({
-                // editorRemountKey1: uuidv4(),
-                // editorRemountKey2: uuidv4(),
-            });
         }
     }
 
@@ -448,16 +442,6 @@ export default class EditProduct extends Component {
                     }
                 </Nav>
                 <TabContent activeTab={current_active_tab}>
-                    {/* <TabPane tabId={TABS.general}>
-                        <GeneralNewProduct
-                            editmode
-                            images_key={general_images_key}
-                            brand_name={sr(general_product, ['brand'])}
-                            product={general_product}
-                            on_change={product => {this.handle_product_change('general_product', product)}}
-                            on_variations_change={this.handle_general_variations_change}
-                        />
-                    </TabPane> */}
                     {
                         create_for.lazada
                             ? <TabPane tabId={TABS.lazada}>
