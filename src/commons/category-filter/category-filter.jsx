@@ -11,7 +11,7 @@ class CategoryFilter extends Component {
             category_path: [],
             show_categories: false,
             show_abort_category_button: !!props.defaultFilterLabel,
-            filter_label: props.defaultFilterLabel || 'Choose category',
+            filter_label: props.defaultFilterLabel || 'Danh mục ngành hàng',
         };
         this._handleAbortCategory = this._handleAbortCategory.bind(this);
     };
@@ -27,7 +27,7 @@ class CategoryFilter extends Component {
 
     _makeCategoryPathString(category_path) {
         const {nameGen} = this.props;
-        return category_path.map(category => nameGen(category)).join(' / ');
+        return category_path.map(category => nameGen(category)).join(' > ');
     };
 
     _isParentCategory(category) {
@@ -68,7 +68,7 @@ class CategoryFilter extends Component {
             category_path: [],
             show_categories: false,
             show_abort_category_button: false,
-            filter_label: 'Choose category',
+            filter_label: 'Danh mục ngành hàng',
         });
         this.props.onAbortCategory();
     };
@@ -115,13 +115,12 @@ class CategoryFilter extends Component {
                 </span>
                 {
                     show_abort_category_button
-                        ? <Button
-                            color="light"
-                            className="abort-category-button"
+                        ? <button
+                            className="btn abort-category-button px-2 py-1"
                             onClick={this._handleAbortCategory}
                         >
                             <i className="fa fa-times" />
-                        </Button>
+                        </button>
                         : null
                 }
                 {
@@ -147,7 +146,7 @@ class CategoryFilter extends Component {
                                         }
                                     </Fragment>
                                     : <div className="category-list-empty">
-                                        No category
+                                        Không có danh mục
                                     </div>
                             }
                         </div>

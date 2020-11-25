@@ -26,7 +26,7 @@ class TopNav extends React.Component {
             <Fragment>
                 <Navbar className="top-nav" color="light" light expand="md">
                     <NavbarBrand href="/">
-                        <h4 className="ml-4 text-primary"><i>Syncpro</i></h4>
+                        <h4 className="ml-4 text-primary"><i>E-Sync</i></h4>
                     </NavbarBrand>
                     <Nav className="ml-auto" navbar>
                         <UncontrolledDropdown nav inNavbar>

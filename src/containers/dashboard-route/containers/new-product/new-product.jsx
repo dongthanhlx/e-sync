@@ -1,5 +1,8 @@
 import React, {Component} from 'react';
 // import PropTypes from 'prop-types';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import 'bootstrap-css-only/css/bootstrap.min.css';
+import 'mdbreact/dist/css/mdb.css';
 import {Nav, NavItem, NavLink, TabContent, TabPane, FormGroup, Label as div, Button} from 'reactstrap';
 import classnames from 'classnames';
 import MainContent from '../../../../commons/layout/main-content';
@@ -29,6 +32,8 @@ import logo_lazada from '../../../../assets/images/normal-use/logo-lazada.png';
 import logo_tiki from '../../../../assets/images/normal-use/logo-tiki.png';
 import logo_shopee from '../../../../assets/images/normal-use/logo-shopee.png';
 import withTabPaneActiveState from '../../../../commons/with-tab-pane-active-state/with-tab-pane-active-state';
+import next_arrow from '../../../../assets/images/normal-use/next-arrow.svg';
+import back_arrow from '../../../../assets/images/normal-use/back-arrow.svg';
 
 const TABS = {
     general: 'general',
@@ -43,7 +48,7 @@ export default class NewProduct extends Component {
         super(props);
         this.state = {
             current_active_tab: TABS.lazada,
-            create_for: {lazada: true, tiki: true, shopee: true},
+            create_for: {lazada: true, tiki: true, shopee: false},
             publishing: false,
 
             general_product: make_general_init_product_form(),
@@ -294,7 +299,7 @@ export default class NewProduct extends Component {
         return (
             <MainContent className="new-product">
                 <FormGroup className="d-flex align-items-center">
-                    <div>Product will be published to</div>
+                    <div>Sản phẩm sẽ được phát hành trên </div>
                     <div className="ml-2 d-flex">
                         <span 
                             style={create_for.lazada ? {} : {opacity: 0.2}} className="ml-2 lazada-logo"
@@ -309,7 +314,7 @@ export default class NewProduct extends Component {
                             <Image src={logo_tiki} alt="Tiki" width="3rem" height="auto" />
                         </span>
                         <span 
-                            style={create_for.shopee ? {} : {opacity: 0.2}} className="ml-2 border rounded shopee-logo"
+                            style={create_for.shopee ? {} : {opacity: 0.2}} className="ml-2 border rounded shopee-logo d-none"
                             onClick={() => {this.setState({create_for: {...create_for, shopee: !create_for.shopee}})}}
                         >
                             <Image src={logo_shopee} alt="Shopee" width="3rem" height="auto" />
@@ -391,7 +396,7 @@ export default class NewProduct extends Component {
                     }
                     {
                         create_for.shopee
-                            ? <TabPane tabId={TABS.shopee}>
+                            ? <TabPane tabId={TABS.shopee} style={{'display': 'none'}}>
                                 <ShopeeNewProduct
                                     product={shopee_product} additional_fields={shopee_additional_fields}
                                     on_change={product => {this.handle_product_change('shopee_product', product)}}
@@ -402,16 +407,26 @@ export default class NewProduct extends Component {
                 </TabContent>
                 <div className="d-flex align-items-center justify-content-between publish">
                     <div className="d-flex">
-                        <Button outline color="secondary" disabled={is_first} onClick={this.prev_tab}>
+                        {/* <Button outline color="secondary" disabled={is_first} onClick={this.prev_tab}>
                             <i className="fa fa-chevron-left" /> Back
+                            <img src={back_arrow} alt="back_arrow"/>
                         </Button>
                         <Button outline color="primary" className="ml-2" disabled={is_last} onClick={this.next_tab}>
                             Next <i className="fa fa-chevron-right" />
-                        </Button>
+                            <img src={next_arrow} alt="next_arrow"/>
+                        </Button> */}
+
+                        <button className="btn btn-default px-0 py-2 rounded-circle" disabled={is_first} onClick={this.prev_tab} style={{'width': '37px'}}>
+                            <img src={back_arrow} alt="back_arrow" style={{'width': '21px'}} />
+                        </button>
+
+                        <button className="btn btn-default px-0 py-2 rounded-circle" disabled={is_last} onClick={this.next_tab} style={{'width': '37px'}}>
+                            <img src={next_arrow} alt="next_arrow" style={{'width': '21px'}} />
+                        </button>
                     </div>
                     <LoadingButton 
                         disabled={!is_last} loading={publishing} 
-                        size="lg" color="primary" 
+                        size="sm" color="primary" 
                         onClick={this.handle_publish}
                     >
                         Publish

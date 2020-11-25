@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import {Table} from 'reactstrap';
 import uuidv4 from 'uuid/v4';
 import {produceHeaderClassName, sortByConfig} from "../../utils/sortable-table-utils";
+import $ from 'jquery';
+import DataTable from 'datatables.net';
 
 class SortableTableWithItemPattern extends Component {
 
@@ -14,6 +16,16 @@ class SortableTableWithItemPattern extends Component {
         };
         this._handleSortForColumn = this._handleSortForColumn.bind(this);
     };
+
+    componentDidMount() {
+        $(document).ready(function () {
+            $('#dtBasicExample').DataTable({
+                "searching": false
+            });
+            
+            $('.dataTables_length').addClass('bs-select');
+        });
+    }
 
     _handleSortForColumn(index) {
         const {sortConfig} = this.props;
@@ -35,37 +47,68 @@ class SortableTableWithItemPattern extends Component {
         const {current_sort_config, is_ascending} = this.state;
         const items = sortByConfig(raw_items, current_sort_config, is_ascending);
         return (
-            <Table {...tableProps} className={`sortable-table-with-item-pattern ${className || ""}`}>
-                <thead>
-                {
-                    customHead
-                        ? React.createElement(customHead, {sortConfig, current_sort_config, is_ascending, onHeaderClick: this._handleSortForColumn})
-                        : <tr>
-                            {
-                                titles.map((title, i)=> (
-                                    <th
-                                        key={uuidv4()}
-                                        className={produceHeaderClassName(sortConfig, current_sort_config, is_ascending, i)}
-                                        onClick={() => {this._handleSortForColumn(i)}}
-                                    >
-                                        {title}
-                                    </th>
-                                ))
-                            }
-                        </tr>
-                }
-                </thead>
-                <tbody>
-                {
-                    items.map((item, i) => React.createElement(itemPattern, {
-                        key: itemKeyGen ? itemKeyGen(item) : uuidv4(),
-                        index: i,
-                        item: item,
-                        ...itemProps
-                    }))
-                }
-                </tbody>
-            </Table>
+            // <Table {...tableProps} className={`sortable-table-with-item-pattern ${className || ""}`}>
+            //     <thead>
+            //     {
+            //         customHead
+            //             ? React.createElement(customHead, {sortConfig, current_sort_config, is_ascending, onHeaderClick: this._handleSortForColumn})
+            //             : <tr>
+            //                 {
+            //                     titles.map((title, i)=> (
+            //                         <th
+            //                             key={uuidv4()}
+            //                             className={produceHeaderClassName(sortConfig, current_sort_config, is_ascending, i)}
+            //                             onClick={() => {this._handleSortForColumn(i)}}
+            //                         >
+            //                             {title}
+            //                         </th>
+            //                     ))
+            //                 }
+            //             </tr>
+            //     }
+            //     </thead>
+            //     <tbody>
+            //     {
+            //         items.map((item, i) => React.createElement(itemPattern, {
+            //             key: itemKeyGen ? itemKeyGen(item) : uuidv4(),
+            //             index: i,
+            //             item: item,
+            //             ...itemProps
+            //         }))
+            //     }
+            //     </tbody>
+            // </Table>
+
+                <table id="dtBasicExample" class="table table-striped table-bordered table-responsive text-nowrap" cellspacing="0" width="100%">
+                    <thead className='rgba-black-slight'>
+                    {
+                        customHead
+                            ? React.createElement(customHead, {sortConfig, current_sort_config, is_ascending, onHeaderClick: this._handleSortForColumn})
+                            : <tr>
+                                {
+                                    titles.map((title, i)=> (
+                                        <th
+                                            key={uuidv4()}
+                                            className='th-sm font-weight-bold'
+                                        >
+                                            {title}
+                                        </th>
+                                    ))
+                                }
+                            </tr>
+                    }
+                    </thead>
+                    <tbody>
+                    {
+                        items.map((item, i) => React.createElement(itemPattern, {
+                            key: itemKeyGen ? itemKeyGen(item) : uuidv4(),
+                            index: i,
+                            item: item,
+                            ...itemProps
+                        }))
+                    }
+                    </tbody>
+                </table>
         );
     }
     

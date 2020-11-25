@@ -8,7 +8,7 @@ export default class MainContent extends Component {
             <Fragment>
                 {this.props.title ? <h2 className="animated fadeIn faster">{this.props.title}</h2> : null}
                 <div className={`main-content ${this.props.className || ''} animated fadeIn faster`}>
-                    {this.props.children}
+                    <b>{this.props.children}</b>
                 </div>
             </Fragment>
         );

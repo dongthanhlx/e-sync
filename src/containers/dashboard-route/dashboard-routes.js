@@ -26,25 +26,25 @@ export const DASHBOARD_ANALYTIC_ROUTES = () => [
     // },
     {
         isNavItem: true,
-        title: "New product",
+        title: "Thêm sản phẩm",
         icon: "fa-cube",
-        htmlTitle: 'Syncpro - New product',
+        htmlTitle: 'Syncpro - Thêm sản phẩm',
         path: "/dashboard/new-product",
         component: NewProduct,
         exact: true
     }, {
         isNavItem: true,
-        title: "My products",
+        title: "Danh sách sản phẩm",
         icon: "fa-cubes",
-        htmlTitle: 'Syncpro - My products',
+        htmlTitle: 'Syncpro - Danh sách sản phẩm',
         path: "/dashboard/my-products",
         component: MyProducts,
         exact: true
     }, {
         isNavItem: false,
-        title: "Edit product",
+        title: "Sửa chi tiết",
         // icon: "fa-cubes",
-        htmlTitle: 'Syncpro - Edit product',
+        htmlTitle: 'Syncpro - Sửa chi tiết',
         path: "/dashboard/my-products/edit-product",
         component: EditProduct,
         exact: true

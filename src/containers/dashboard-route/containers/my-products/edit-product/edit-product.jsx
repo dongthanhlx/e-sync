@@ -17,6 +17,9 @@ import {lazada_sync, general_product_to_lazada_variations} from '../../new-produ
 import {tiki_sync, general_variations_to_tiki_variants} from '../../new-product/tiki-new-product/tiki-sync';
 import {shopee_sync} from '../../new-product/shopee-new-product/shopee-sync';
 
+import next_arrow from '../../../../../assets/images/normal-use/next-arrow.svg';
+import back_arrow from '../../../../../assets/images/normal-use/back-arrow.svg';
+
 import {
     make_general_init_product_form, 
     from_db_make_general_init_product_form, 
@@ -67,7 +70,7 @@ export default class EditProduct extends Component {
         this.state = {
             product_id: '',
 
-            current_active_tab: TABS.tiki,
+            current_active_tab: TABS.lazada,
             create_for: {lazada: true, tiki: true, shopee: true},
             publishing: false,
 
@@ -491,16 +494,17 @@ export default class EditProduct extends Component {
                 </TabContent>
                 <div className="d-flex align-items-center justify-content-between publish">
                     <div className="d-flex">
-                        <Button outline color="secondary" disabled={is_first} onClick={this.prev_tab}>
-                            <i className="fa fa-chevron-left" /> Back
-                        </Button>
-                        <Button outline color="primary" className="ml-2" disabled={is_last} onClick={this.next_tab}>
-                            Next <i className="fa fa-chevron-right" />
-                        </Button>
+                        <button className="btn btn-default px-0 py-2 rounded-circle" disabled={is_first} onClick={this.prev_tab} style={{'width': '37px'}}>
+                            <img src={back_arrow} alt="back_arrow" style={{'width': '21px'}} />
+                        </button>
+
+                        <button className="btn btn-default px-0 py-2 rounded-circle" disabled={is_last} onClick={this.next_tab} style={{'width': '37px'}}>
+                            <img src={next_arrow} alt="next_arrow" style={{'width': '21px'}} />
+                        </button>
                     </div>
                     <LoadingButton 
                         disabled={!is_last} loading={publishing} 
-                        size="lg" color="primary" 
+                        size="sm" color="primary" 
                         onClick={this.handle_publish}
                     >
                         Update

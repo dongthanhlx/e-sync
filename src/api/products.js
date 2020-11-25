@@ -1,7 +1,8 @@
 import {http_post, http_get, http_put, http_delete} from './senders/sender';
+import {stringify} from 'query-string';
 
-export function get_list_products() {
-    const route = `/products`;
+export function get_list_products(name) {
+    const route = `/products?${stringify({name})}`;
     return http_get(route);
 }
 

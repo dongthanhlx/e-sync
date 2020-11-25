@@ -137,8 +137,37 @@
             height: 535px;
         }
     }
+    .original_price {
+        text-decoration: line-through;
+    }
+
+    legend {
+        font-size: 11px;
+    }
 }
 
 .bg-light {
     background-color: #f8f9fa !important;
 }
+
+@media not all and (min-resolution:.001dpcm) {
+    @supports (-webkit-appearance: none) and (stroke-color:transparent) {
+    
+    .number-input.def-number-input.safari_only button:before,
+    .number-input.def-number-input.safari_only button:after {
+    margin-top: -.3rem;
+    }
+    }
+    }
+    input::-webkit-input-placeholder {
+        font-size: 14px;
+    }
+    
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    .btn {
+        text-transform: unset !important;
+      }

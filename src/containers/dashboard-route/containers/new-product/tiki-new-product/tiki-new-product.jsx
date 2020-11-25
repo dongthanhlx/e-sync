@@ -25,6 +25,8 @@ import guarantee from '../../../../../images/guarantee.svg';
 import refund from '../../../../../images/refund.svg';
 import icon_add from '../../../../../images/icons-add.svg';
 import icon_remove from '../../../../../images/icons-remove.svg';
+import tikicard from '../../../../../assets/images/normal-use/tikicard.png';
+import question from '../../../../../assets/images/normal-use/question.svg';
 
 export default class TikiNewProduct extends Component {
 
@@ -233,13 +235,13 @@ export default class TikiNewProduct extends Component {
                                     placeholder={this.field_brand.example ? `Example: ${this.field_brand.example}` : ''}
                                     value={sr(product, TikiNewProduct.make_attribute_path(this.field_brand)) || ''}
                                     onChange={e => {this.handle_change_form(TikiNewProduct.make_attribute_path(this.field_brand), e.target.value)}} 
-                                    className='col-4 text-primary'
+                                    className='col-4 text-primary border-0'
                                 />
                             </FormGroup>
 
                             <Row>
-                                <Col xs={8}>
-                                    <FormGroup className='m-0'>
+                                <Col xs={9}>
+                                    {/* <FormGroup className='m-0'>
                                         <Input 
                                             type="textarea" id="gp_name" 
                                             value={sr(general_product, ['name'])}
@@ -247,21 +249,33 @@ export default class TikiNewProduct extends Component {
                                             placeholder='Tên sản phẩm'
                                             className='name'
                                         />
-                                    </FormGroup>
+                                    </FormGroup> */}
+
+                                    <div className="md-form my-0">
+                                        <textarea 
+                                            id="textarea-char-counter" 
+                                            class="form-control md-textarea border-bottom-0 gp_name" 
+                                            length="120" 
+                                            value={sr(general_product, ['name'])}
+                                            onChange={e => {this.handle_change_general_form(['name'], e.target.value)}}
+                                            placeholder='Tên sản phẩm'
+                                            style={{'fontSize': '24px'}}
+                                        ></textarea>
+                                    </div>
                                 </Col>
 
-                                <Col xs={4} className='text-right'> {/* share */}
-                                    <button className="btn btn-light p-2 rounded-circle mr-2 heart">
+                                <Col xs={3} className='text-right'> {/* share */}
+                                    <button className="btn p-2 rounded-circle mr-2 heart">
                                         <img src={heart} alt="heart" width='24'/>
                                     </button>
 
-                                    <button className="btn btn-light p-2 rounded-circle share">
+                                    <button className="btn p-2 rounded-circle share">
                                         <img src={share} alt="share" width='24'/>
                                     </button>
                                 </Col>
                             </Row>
 
-                            <div className="rating mt-3">
+                            <div className="rating">
                                 {
                                     [...Array(5)].map((e, i) => (
                                         <img src={star} height={16} width={16} alt='start' key={i} />
@@ -275,7 +289,7 @@ export default class TikiNewProduct extends Component {
                             <Col xs='8'>
                                 <Row form className='bg-light p-3 my-3 price'>
                                     <Col xs={6}>
-                                        <InputGroup className='mr-2 mb-0'>
+                                        {/* <InputGroup className='mr-2 mb-0'>
                                             <Input 
                                                 type="number" id="gp_sell_price" 
                                                 value={sr(general_product, ['sell_price'])}
@@ -284,11 +298,21 @@ export default class TikiNewProduct extends Component {
                                                 className='sell_price'
                                             />
                                             <InputGroupAddon addonType="prepend">₫</InputGroupAddon>
-                                        </InputGroup>
+                                        </InputGroup> */}
+
+                                        <div class="md-form my-0">
+                                            <input 
+                                                type="number" 
+                                                class="form-control sell_price border-bottom-0 my-0"  
+                                                value={sr(general_product, ['sell_price'])}
+                                                onChange={e => {this.handle_change_general_form(['sell_price'], e.target.value)}} 
+                                                placeholder='Giá bán'
+                                            />
+                                        </div>
                                     </Col>
 
-                                    <Col xs={4}>
-                                        <InputGroup className='mb-0'>
+                                    <Col xs={3}>
+                                        {/* <InputGroup className='mb-0'>
                                             <Input 
                                                 type="number" id="gp_original_price" 
                                                 value={sr(general_product, ['original_price'])}
@@ -297,8 +321,23 @@ export default class TikiNewProduct extends Component {
                                                 className='original_price'
                                             />
                                             <InputGroupAddon addonType="prepend">₫</InputGroupAddon>
-                                        </InputGroup>
+                                        </InputGroup> */}
+                                        <div class="md-form my-0">
+                                            <input 
+                                                type="number" 
+                                                class="form-control origin_price border-bottom-0 my-0"  
+                                                value={sr(general_product, ['origin_price'])}
+                                                onChange={e => {this.handle_change_general_form(['origin_price'], e.target.value)}} 
+                                                placeholder='Giá gốc'
+                                            />
+                                        </div>
                                     </Col>
+
+                                    <a href='https://tiki.vn/chuong-trinh/mo-the-tikicard?src=pdp_badge' className='d-flex mt-2'>
+                                        <img src={tikicard} alt="tiki-card" height={24} />
+                                        <div className='text-dark m-1'><b>Hoàn tiền tối đa 15% tối đa 600k/tháng</b></div>
+                                        <img src={question} alt="question" width={11} />
+                                    </a>
                                 </Row>
 
                                 <div className='delivery border-top border-bottom py-3'>
@@ -310,7 +349,7 @@ export default class TikiNewProduct extends Component {
                                         <fieldset className='border px-3 py-2 rounded'>
                                             <legend className='mb-0'><b>GIAO TIÊU CHUẨN</b></legend>
 
-                                            <b className='text-success'>Thứ 3, ngày 03 tháng 11</b>
+                                            <b className='text-success font-weight-bold'>Thứ 3, ngày 03 tháng 11</b>
                                             <div><span className='text-muted'>Vận chuyển:</span> 35.000 ₫</div>
                                         </fieldset>
                                     </form>
@@ -318,8 +357,8 @@ export default class TikiNewProduct extends Component {
 
                                 <div className='py-3 border-bottom'>
                                     <FormGroup className='quantity'>
-                                        <Label for="gp_quantity">Số lượng</Label>
-                                        <InputGroup>
+                                        <Label for="gp_quantity" style={{'fontSize': '15px'}}><b>Số lượng</b></Label>
+                                        {/* <InputGroup>
                                             <InputGroupAddon addonType="prepend" className='border border-right-0 rounded p-1'>
                                                 <img src={icon_remove} alt="remove"/>
                                             </InputGroupAddon>
@@ -333,11 +372,25 @@ export default class TikiNewProduct extends Component {
                                             <InputGroupAddon addonType="prepend" className='border border-left-0 rounded p-1'>
                                                 <img src={icon_add} alt="add"/>
                                             </InputGroupAddon>
-                                        </InputGroup>
+                                        </InputGroup> */}
+
+                                        <div class="def-number-input number-input safari_only">
+                                            <button onClick={(e) => {e.target.parentNode.querySelector('input[type=number]').stepDown()}} class="minus"></button>
+                                            <input 
+                                                class="quantity font-weight-bold" 
+                                                min="0" 
+                                                name="quantity" 
+                                                value={sr(general_product, ['quantity'])} 
+                                                type="number" 
+                                                placeholder='1'
+                                                onChange={e => {this.handle_change_general_form(['quantity'], e.target.value)}} 
+                                            />
+                                            <button onClick={(e) => {e.target.parentNode.querySelector('input[type=number]').stepUp()}} class="plus"></button>
+                                        </div>
                                     </FormGroup>
 
                                     <div className='buy'>
-                                        <Button color='danger'>Chọn mua</Button>
+                                        <button className='btn btn-danger z-depth-0' style={{'fontSize': '15px'}}>Chọn mua</button>
 
                                         <div></div>
                                     </div>
@@ -346,20 +399,20 @@ export default class TikiNewProduct extends Component {
 
                             <Col xs='4' className='border rounded p-0 mt-3' style={{'height': 'fit-content'}}>
                                 <div className='shop px-3 py-2'>
-                                    <div>Cam kết chính hiệu bởi</div>
+                                    <div><b>Cam kết chính hiệu bởi</b></div>
 
                                     <div>
-                                        <img src={shop} alt="shop" width={44} />
+                                        <img src={shop} alt="shop" width={44} style={{verticalAlign: 'bottom'}} />
 
-                                        <a href="/" className='ml-2'>
-                                            <b>shoptila</b>
-                                            <span className='text-primary'>Xem shop</span>
+                                        <a href="/" className='ml-2 font-weight-bold'>
+                                            <div style={{fontSize: 15}} className='text-dark mb-1'>Shoptila</div>
+                                            <div className="text-primary">Xem shop</div>
                                         </a>
                                     </div>
                                 </div>
 
                                 <div className='px-3 py-2 border-top border-bottom d-flex justify-content-between'>
-                                    <span>Thời gian bảo hành</span>
+                                    <b>Thời gian bảo hành</b>
                                     <b>6 tháng</b>
                                 </div>
 
@@ -367,10 +420,10 @@ export default class TikiNewProduct extends Component {
                                     <Col className='text-center pr-0'>
                                         <img src={compensation} alt="compensation" width={20} />
                                         <div>
-                                            Hoàn tiền <b>111%</b> 
-                                            <div>
-                                                <a href="https://drive.google.com/file/d/1po3r6qApp-q7JDB5kwGKujVtvInfO-ih/view">nếu giả</a>
-                                            </div>
+                                            <b>
+                                                Hoàn tiền <div className="font-weight-bold">111%</div>
+                                                <a href="https://drive.google.com/file/d/1po3r6qApp-q7JDB5kwGKujVtvInfO-ih/view"  className='text-dark' style={{'textDecorationLine': 'underline'}}>nếu giả</a>
+                                            </b>
                                         </div>
                                     </Col>
 
@@ -378,7 +431,7 @@ export default class TikiNewProduct extends Component {
                                         <img src={guarantee} alt="guarantee" width={20}/>
 
                                         <div>
-                                            Mở hộp kiểm tra nhận hàng
+                                            <b>Mở hộp kiểm tra nhận hàng</b>
                                         </div>
                                     </Col>
 
@@ -386,11 +439,13 @@ export default class TikiNewProduct extends Component {
                                         <img src={refund} alt="refund" width={20}/>
 
                                         <div>
-                                            Đổi trả trong 
-                                            <div>
-                                                <b>7 ngày</b>
-                                            </div>
-                                            nếu sp lỗi
+                                            <b>
+                                                Đổi trả trong 
+                                                <div className='font-weight-bold'>
+                                                    7 ngày
+                                                </div>
+                                                nếu sp lỗi
+                                            </b>
                                         </div>
                                     </Col>
                                 </Row>

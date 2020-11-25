@@ -8,9 +8,9 @@ class ThumbnailImage extends Component {
         return src 
             ? link
                 ? <a href={src} target="_blank" rel="noopener noreferrer">
-                    <img className={`thumbnail-image ${className}`} src={src} alt="thumbnail" />
+                    <img className={`img-thumbnail ${className}`} src={src} alt="thumbnail" width={50}/>
                 </a>
-                : <img className={`thumbnail-image ${className}`} src={src} alt="thumbnail" />
+                : <img className={`img-thumbnail ${className}`} src={src} alt="thumbnail" width={50}/>
             : 'loading';
     };
 

@@ -33,6 +33,8 @@ import servenDay from '../../../../../images/7-day.png';
 import shield from '../../../../../images/shield.png';
 import zaloPay from '../../../../../images/zaloPay.png';
 import infonote from '../../../../../images/infonote.svg';
+import right_site from '../../../../../assets/images/normal-use/right.png';
+import warning from '../../../../../assets/images/normal-use/warning.png';
 
 export default class LazadaNewProduct extends Component {
 
@@ -240,23 +242,25 @@ export default class LazadaNewProduct extends Component {
 
                     <Col xs='5' className='mt-3'>
                         <div className='border-bottom'>
-                            <FormGroup>
-                                <Input 
-                                    type="textarea" id="gp_name"
-                                    value={sr(general_product, ['name'])}
+                            <div class="md-form">
+                                <textarea 
+                                    id="textarea-char-counter" 
+                                    class="form-control md-textarea border-bottom-0 gp_name" 
+                                    length="120" 
                                     onChange={e => {this.handle_change_general_form(['name'], e.target.value)}}
+                                    value={sr(general_product, ['name'])}
                                     placeholder='Tên sản phẩm'
-                                />
-                            </FormGroup>
+                                ></textarea>
+                            </div>
 
-                            <div className="d-flex justify-content-between mb-3 mt-4">
+                            <div className="d-flex justify-content-between mb-2 mt-4">
                                 <div className="rating">
                                     {
                                         [...Array(5)].map((e, i) => (
                                             <img src={star} height={12} width={12} alt='start' key={i} />
                                         ))
                                     }
-                                    <a href="/">187 đánh giá</a>
+                                    <a href="/" className='text-default font-weight-normal'>187 đánh giá</a>
                                 </div>
 
                                 <div className="share">
@@ -266,9 +270,9 @@ export default class LazadaNewProduct extends Component {
                             </div>
 
                             <FormGroup className="row">
-                                <Label for="gp_brand" className='col-3 align-self-end'>Thương hiệu: </Label>
+                                <Label for="gp_brand" className='ml-3 align-self-end'>Thương hiệu: </Label>
                                 <SelectInput
-                                    className='col-4'
+                                    className='col-4 text-default border-0 pl-1 bg-white'
                                     items={brands}
                                     itemIdGen={brand => brand.brand_id}
                                     itemLabelGen={brand => brand.name}
@@ -282,32 +286,25 @@ export default class LazadaNewProduct extends Component {
                         </div>
 
                         <div className="mt-4 border-bottom">
-                            <FormGroup className='col-6 sell_price pl-0 mb-0'>
-                                <InputGroup>
-                                    <Input 
-                                        type="number" id="gp_sell_price" 
-                                        value={sr(general_product, ['sell_price'])}
-                                        onChange={e => {this.handle_change_general_form(['sell_price'], e.target.value)}} 
-                                        placeholder='Giá bán'
-                                    />
+                            <div class="md-form input-with-post-icon w-50 my-0">
+                                <input 
+                                    type="number" 
+                                    class="form-control sell_price border-bottom-0 my-0"  
+                                    value={sr(general_product, ['sell_price'])}
+                                    onChange={e => {this.handle_change_general_form(['sell_price'], e.target.value)}} 
+                                    placeholder='Giá bán'
+                                />
+                            </div>
 
-                                    <InputGroupAddon addonType="prepend">₫</InputGroupAddon>
-                                </InputGroup>
-                            </FormGroup>
-
-                            <FormGroup className='col-5 original_price pl-0'>
-                                <InputGroup>
-                                    <Input 
-                                        type="number" id="gp_original_price" 
-                                        value={sr(general_product, ['original_price'])}
-                                        onChange={e => {this.handle_change_general_form(['original_price'], e.target.value)}}
-                                        placeholder='Giá gốc'
-                                        className='original_price'
-                                    />
-
-                                    <InputGroupAddon addonType="prepend">₫</InputGroupAddon>
-                                </InputGroup>
-                            </FormGroup>
+                            <div class="md-form input-with-post-icon w-25 my-0">
+                                <input 
+                                    type="number" 
+                                    class="form-control original_price border-bottom-0 text-muted" 
+                                    value={sr(general_product, ['original_price'])}
+                                    onChange={e => {this.handle_change_general_form(['original_price'], e.target.value)}} 
+                                    placeholder='Giá gốc'
+                                />
+                            </div>
 
                             <Row className='mt-4 mb-2'>
                                 <Col xs='3'>
@@ -321,26 +318,34 @@ export default class LazadaNewProduct extends Component {
                         </div>
 
                         <div className='mt-4'>
-                            <FormGroup className='row'>
-                                <Label for="gp_quantity" className="col-3 align-self-end">Số lượng</Label>
-                                <Input 
-                                    type="number" id="gp_quantity" 
-                                    value={sr(general_product, ['quantity'])}
-                                    onChange={e => {this.handle_change_general_form(['quantity'], e.target.value)}} 
-                                    className='col-4'
-                                    placeholder='0'
-                                />
-                            </FormGroup>
+                            <Row>
+                                <Col xs='3' className="text-muted">Số lượng</Col>
+                                <Col className='px-0'>
+                                    <div class="def-number-input number-input safari_only btn-light">
+                                        <button onClick={(e) => {e.target.parentNode.querySelector('input[type=number]').stepDown()}} class="minus"></button>
+                                        <input 
+                                            class="quantity" 
+                                            min="0" 
+                                            name="quantity" 
+                                            value={sr(general_product, ['quantity'])} 
+                                            type="number" 
+                                            placeholder='1'
+                                            onChange={e => {this.handle_change_general_form(['quantity'], e.target.value)}} 
+                                        />
+                                        <button onClick={(e) => {e.target.parentNode.querySelector('input[type=number]').stepUp()}} class="plus"></button>
+                                    </div>
+                                </Col>
+                            </Row>
 
                             <Row className='buy-form my-3 mx-0'>
-                                <button className="btn col mr-2 py-2">Mua ngay</button>
-                                <button className="btn col py-2">Thêm vào giỏ hàng</button>
+                                <button className="btn col text-capitalize z-depth-0 py-2 mx-0 mr-2">Mua ngay</button>
+                                <button className="btn col text-capitalize z-depth-0 py-2 mx-0">Thêm vào giỏ hàng</button>
                             </Row>
                         </div>
                     </Col>
 
                     <Col className='right pr-3'>
-                        <div className="delivery">
+                        {/* <div className="delivery">
                             <div className='d-flex justify-content-between pt-3'>
                                 <span>Tùy chọn giao hàng</span>
                                 <img src={info} alt="info"/>
@@ -409,13 +414,15 @@ export default class LazadaNewProduct extends Component {
                                     <Col xs='1'></Col>
                                 </Row>
                             </div>
-                        </div>
+                        </div> */}
+
+                        <img src={right_site} alt="right-site"/>
                     </Col>
                 </Row>
 
                 <div className="description bg-white mt-3">
                     <div className="title py-3 px-4">
-                        <h6 className='mb-0'>
+                        <h6 className='mb-0 font-weight-bold'>
                             Mô tả sản phẩm {sr(general_product, ['name'])}
                         </h6>
                     </div>
@@ -425,7 +432,7 @@ export default class LazadaNewProduct extends Component {
                             <img src={infonote} alt="info note" width='20'/>
                         </div>
 
-                        <div className='ml-4 note'>
+                        <div className='ml-4'>
                             Sản phẩm này là tài sản cá nhân được bán bởi Nhà Bán Hàng
                             Cá Nhân và không thuộc đối tượng phải chịu thuế GTGT. 
                             Do đó hóa đơn VAT không được cấp trong trường hợp này. 

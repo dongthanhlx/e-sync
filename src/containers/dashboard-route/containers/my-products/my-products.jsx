@@ -1,4 +1,8 @@
 import React, {Component} from 'react';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import 'bootstrap-css-only/css/bootstrap.min.css';
+import 'mdbreact/dist/css/mdb.css';
+import './my-products.scss';
 import {Link} from 'react-router-dom';
 import MainContent from '../../../../commons/layout/main-content';
 import {Button, Badge} from 'reactstrap';
@@ -33,15 +37,25 @@ export default class MyProducts extends Component {
         this.api_get_list_products();
     }
 
-    async api_get_list_products() {
+    async api_get_list_products(name) {
         try {
-            const products = await get_list_products();
+            const products = await get_list_products(name);
             this.setState({products});
         } catch (err) {
             console.error(err);
             noti('error', err);
         }
     }
+
+    // async api_get_list_products(product_name) {
+    //     try {
+    //         const products = await get_list_products();
+    //         this.setState({products});
+    //     } catch (err) {
+    //         console.error(err);
+    //         noti('error', err);
+    //     }
+    // }
 
     async api_delete_product(product_id) {
         try {
@@ -71,14 +85,20 @@ export default class MyProducts extends Component {
         const {products, selected_product, is_open_detail_modal} = this.state;
         return (
             <MainContent className="my-products">
-                <Link to="/dashboard/new-product">
-                    <Button color="primary" className="mb-3">
-                        <i className="fa fa-plus" /> Publish new product
-                    </Button>
-                </Link>
+                <form class="form-inline d-flex justify-content-center md-form form-sm">
+                    <input 
+                        class="form-control form-control-sm mr-3 w-50" 
+                        type="text" 
+                        placeholder="Tìm kiếm với tên sản phẩm"
+                        aria-label="Search" 
+                        onChange={e => this.api_get_list_products(e.target.value)}
+                    />
+                    <i class="fas fa-search" aria-hidden="true"></i>
+                </form>      
+
                 <SortableTableWithItemPattern
                     className="table-striped my-products-table"
-                    titles={['No', 'Image', 'Product name', 'Lock content', 'Status', 'Action']}
+                    titles={['Stt', 'Ảnh', 'Tên sản phẩm', 'Lock content', 'Trạng Thái', '']}
                     items={products}
                     itemPattern={MyProductsTableItem}
                     itemKeyGen={item => item._id}
@@ -101,14 +121,14 @@ export default class MyProducts extends Component {
 function MyProductsTableItem({item, index, on_show_detail, on_delete}) {
     return (
         <tr>
-            <td>{index + 1}</td>
-            <td><ThumbnailImage src={item.image} /></td>
-            <td><button className="btn" onClick={e => {on_show_detail(item)}}>{item.name}</button></td>
+            <th scope='row'>{index + 1}</th>
+            <td><ThumbnailImage src={item.image}/></td>
+            <td><button className="btn z-depth-0 my-0" onClick={e => {on_show_detail(item)}}>{item.name}</button></td>
             <td>
                 {
                     item.lock_content
-                        ? <Badge color="danger">Locked</Badge>
-                        : <Badge color="light">Open</Badge>
+                        ? <span className='badge badge-danger'>Locked</span>
+                        : <span className='badge badge-default'>Open</span>
                 }
             </td>
             <td>
@@ -117,14 +137,21 @@ function MyProductsTableItem({item, index, on_show_detail, on_delete}) {
                 }
             </td>
             <td>
-                <Link to={`/dashboard/my-products/edit-product?${stringify({product_id: item._id})}`}>
-                    <Button size="sm" className="ml-1">
-                        <i className="fa fa-edit" />
-                    </Button>
-                </Link>
-                <Button outline color="danger" size="sm" className="ml-2" onClick={e => {on_delete(item)}}>
-                    <i className="fa fa-trash-alt" />
-                </Button>
+                <div className="d-flex">
+                    <Link to={`/dashboard/my-products/edit-product?${stringify({product_id: item._id})}`}>
+                        {/* <Button size="sm" className="ml-1">
+                            <i className="fa fa-edit" />
+                        </Button> */}
+
+                        <button className="btn btn-default btn-rounded btn-sm px-2">
+                            <i class="fas fa-pencil-alt mt-0"></i>
+                        </button>
+                    </Link>
+                    
+                    <button className="btn btn-danger btn-rounded btn-sm px-2">
+                        <i class="far fa-trash-alt mt-0"></i>
+                    </button>
+                </div>
             </td>
         </tr>
     );

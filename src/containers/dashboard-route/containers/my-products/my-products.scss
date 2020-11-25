@@ -1,4 +1,8 @@
 .my-products {
+    td {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
     .my-products-table {
         td {
             span.badge {
