@@ -3,19 +3,19 @@ import {v4 as uuidv4} from 'uuid';
 
 export function make_general_init_product_form() {
     return {
-        name: '',               // tên sản phẩm (String)
-        brand: '',              // thương hiệu sản phẩm (String)
-        original_price: '',     // giá gốc sản phẩm (Integer)
-        sell_price: '',         // bán bán sản phẩm (Integer)
-        images: [],             // ảnh sản phẩm (Array)
-        short_description: '',  // nội dung mô tả ngắn của sản phẩm (HTML)
-        description: '',        // nội dung mô tả sản phẩm (JSON)
-        html__short_description: '',    // nội dung mô tả ngắn của sản phẩm (HTML)
-        html__description: '',          // nội dung mô tả sản phảm (HTML)
-        package_width: '',              // chiều rộng sản phẩm  
-        package_length: '',             // chiều dài sản phẩm
-        package_height: '',             // chiều cao sản phẩm
-        package_weight: '',             // cân nặng của sản phẩm
+        name: '',               // tên sản phẩm 
+        brand: '',              // thương hiệu sản phẩm 
+        original_price: '',     // giá gốc sản phẩm 
+        sell_price: '',         // bán bán sản phẩm 
+        images: [],             // ảnh sản phẩm 
+        short_description: '',  // nội dung mô tả ngắn của sản phẩm ở dạng JSON
+        description: '',        // nội dung mô tả sản phẩm ở dạng JSON
+        html__short_description: '',    // nội dung mô tả ngắn của sản phẩm ở dạng HTML
+        html__description: '',          // nội dung mô tả sản phẩm ở dạng HTML
+        package_width: '',              // chiều rộng gói hàng 
+        package_length: '',             // chiều dài gói hàng
+        package_height: '',             // chiều cao gói hàng
+        package_weight: '',             // cân nặng của gói hàng
         seller_sku: '',                 // sku của sản phẩm
         quantity: '',                   // số lượng sản phẩm còn lại trong kho 
 
