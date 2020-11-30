@@ -3,30 +3,30 @@ import {v4 as uuidv4} from 'uuid';
 
 export function make_lazada_init_product_form() {
     return {
-        PrimaryCategory: '',
+        PrimaryCategory: '',    // id của danh mục ngành hàng
         Attributes: {
-            name: '',
-            brand: '',
-            short_description: '',
-            description: '',
+            name: '',           // tên sản phẩm
+            brand: '',          // thương hiệu sản phẩm
+            short_description: '',  // nội dung phần mô tả ngắn
+            description: '',        // nội dung phần mô tả sản phẩm
         },
         Skus: [{
             Sku: [{
-                id: uuidv4(),
-                SellerSku: '',
-                quantity: '',
-                price: '',
-                special_price: '',
+                id: uuidv4(),       // id của biến thể
+                SellerSku: '',      // sku của biến thể
+                quantity: '',       // số lượng sản phẩm còn lại của biến thể
+                price: '',          // giá gốc của biến thể
+                special_price: '',  // giá bán của biến thể
 
-                package_content: '',
-                special_from_date: moment().startOf('day').format('YYYY-MM-DD HH:mm'),
-                special_to_date: moment().startOf('day').add(1, 'month').format('YYYY-MM-DD HH:mm'),
+                package_content: '',    // nội dung chương trình khuyến mãi
+                special_from_date: moment().startOf('day').format('YYYY-MM-DD HH:mm'),                  // ngày bắt đầu khuyến mãi
+                special_to_date: moment().startOf('day').add(1, 'month').format('YYYY-MM-DD HH:mm'),    // ngáy kết thúc khuyến mãi
 
-                package_weight: '',
-                package_length: '',
-                package_width: '',
-                package_height: '',
-                Images: {
+                package_weight: '',     // cân nặng của gói hàng
+                package_length: '',     // chiều dài của gói hàng
+                package_width: '',      // chiều rộng của gói hàng
+                package_height: '',     // chiều cao của gói hàng
+                Images: {               // ảnh sản phẩm
                     Image: []
                 }
             }]
