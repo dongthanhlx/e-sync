@@ -2,22 +2,22 @@ import {v4 as uuidv4} from 'uuid';
 
 export function make_tiki_init_product_form() {
     return {
-        category_id: '',
-        name: '',
-        description: '',
-        market_price: '',
-        attributes: {
+        category_id: '',        // id của Danh mục ngành hàng
+        name: '',               // tên sản phẩm
+        description: '',        // mô tả sản phẩm
+        market_price: '',       // giá bán 
+        attributes: {           // các thuộc tính đi kèm với sản phẩm
             bulky: 1,
-            product_top_features: '',
+            product_top_features: '',       // mô tả ngắn của sản phẩm 
             brand: '',
             product_width: 0,
             product_length: 0,
             product_height: 0,
             product_weight_kg: 0,
         },
-        image: '',
-        images: [],
-        option_attributes: [],
+        image: '',              // ảnh thumbnail (ảnh thu nhỏ) của sản phẩm
+        images: [],             // danh sách các ảnh sản phẩm
+        option_attributes: [],  // tên các biến thể
         variants: [
             {
                 id: uuidv4(),
@@ -25,8 +25,8 @@ export function make_tiki_init_product_form() {
                 price: '',
                 quantity: '',
                 market_price: '',
-                option1: '',
-                option2: '',
+                option1: '',        // giá trị của biến thể 1
+                option2: '',        // giá trị của biến thể 2
                 inventory_type: '',
                 supplier: '',
                 brand_origin: '',
