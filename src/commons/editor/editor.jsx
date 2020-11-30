@@ -8,7 +8,6 @@ class Editor extends React.Component {
         super(props);
         this.timer = null;
         this.emailEditorRef = createRef();
-        // debugger;
         this.onLoad = this.onLoad.bind(this);
     }
 
@@ -16,22 +15,12 @@ class Editor extends React.Component {
         if (prev_props.design !== this.props.design) this.onLoad();
     }
 
-    // componentDidMount() {
-    //     this._mounted = true;
-    // }
-
     componentWillUnmount() {
-        // this._mounted = false;
-        // if (this.timer) {
-        //     clearTimeout(this.load);
-        // }
         clearTimeout(this.timer);
     }
 
     load() {
         const unlayer = this.emailEditorRef.current.editor;
-        // if (!unlayer)
-        // debugger;
         const {type, design, on_change_general, on_change_html_general} = this.props;
 
         if (type === 'legacy') {
@@ -67,11 +56,9 @@ class Editor extends React.Component {
     }
 
     onLoad () {
-        // if (this._mounted) {
             this.timer = setTimeout(() => {
                 this.load()
             }, 0);
-        // }
     }
 
     render () {
