@@ -104,7 +104,7 @@ export default class EditProduct extends Component {
             product_id: '',
 
             current_active_tab: TABS.lazada,
-            create_for: {lazada: true, tiki: true, shopee: true},
+            create_for: {lazada: true, tiki: true, shopee: false},
             publishing: false,
 
             general_product: make_general_init_product_form(),
@@ -290,7 +290,8 @@ export default class EditProduct extends Component {
         const new_tiki_variants = general_variations_to_tiki_variants(
             tiki_variants, 
             new_general_product['variation_values'], 
-            new_general_product['variation_attributes']
+            new_general_product['variation_attributes'],
+            new_general_product['images']
         );
         const tiki_product = {...this.state.tiki_product, option_attributes: new_tiki_option_attributes, variants: new_tiki_variants};
 

@@ -83,6 +83,7 @@ export default class VariationValueTableItem extends Component {
                         color="danger" 
                         disabled={editmode} 
                         onClick={e => {on_change_general(['variation_values'], variation_values.filter(v => v.id !== item.id))}}
+                        className='btn-sm'
                     >
                         <i className="fa fa-trash-alt" />
                     </Button>

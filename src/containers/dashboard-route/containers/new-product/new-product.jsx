@@ -205,6 +205,7 @@ export default class NewProduct extends Component {
     }
 
     handle_product_change(which_product, value) {
+        console.log(value);
         this.setState({[which_product]: value});
     }
 
@@ -215,7 +216,8 @@ export default class NewProduct extends Component {
         const new_tiki_variants = general_variations_to_tiki_variants(
             tiki_variants, 
             new_general_product['variation_values'], 
-            new_general_product['variation_attributes']
+            new_general_product['variation_attributes'],
+            new_general_product['images']
         );
         const tiki_product = {...this.state.tiki_product, option_attributes: new_tiki_option_attributes, variants: new_tiki_variants};
 
@@ -295,6 +297,7 @@ export default class NewProduct extends Component {
             shopee_additional_fields, shopee_product,
             lazadaEditorKey, tikiEditorKey,
         } = this.state;
+        console.log(general_product);
         const {is_first, is_last} = this.is_current_special_tab();
         return (
             <MainContent className="new-product">

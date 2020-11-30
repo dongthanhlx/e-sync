@@ -1,0 +1,44 @@
+{
+  "category_id": 10383,
+  "name": "GIÀY THỂ THAO NAM NEXGEN NX-18666",
+  "description": "<p>san pham dep tot chat luong cao va chinh sach tot</p>",
+  "market_price": 984000,
+  "attributes": {
+    "bulky": 1,
+    "origin": "viet nam",
+    "product_top_features": "Chat luong tot nhe dep",
+    "brand": "OEM",
+    "brand_origin": "viet nam",
+    "require_expiry_date": 1,
+    "product_width": 10,
+    "product_length": 20,
+    "product_height": 10,
+    "product_weight_kg": 0.5,
+    "is_warranty_applied": 0
+  },
+  "image": "https://e-sync.s3-ap-southeast-1.amazonaws.com/00b35530-9df4-48db-a495-a40e50bedf13.jpeg",
+      "images": [
+        "https://e-sync.s3-ap-southeast-1.amazonaws.com/0118a9f9-4636-418d-af51-ceaf69ba723f.jpg",
+        "https://e-sync.s3-ap-southeast-1.amazonaws.com/035e0cf7-2179-4173-b778-6b70b9c1ed02.jpg"
+      ],
+  "option_attributes": [
+    "color"
+  ],
+  "variants": [
+    {
+      "sku": "B0055QD0EC11",
+      "price": 984000,
+      "market_price": 984000,
+      "option1": "Black",
+      "inventory_type": "instock",
+      "supplier": null,
+      "quantity": 100,
+      "brand_origin": "viet nam",
+      "image": "https://e-sync.s3-ap-southeast-1.amazonaws.com/00b35530-9df4-48db-a495-a40e50bedf13.jpeg",
+      "images": [
+        "https://e-sync.s3-ap-southeast-1.amazonaws.com/0118a9f9-4636-418d-af51-ceaf69ba723f.jpg",
+        "https://e-sync.s3-ap-southeast-1.amazonaws.com/035e0cf7-2179-4173-b778-6b70b9c1ed02.jpg"
+      ]
+    }
+  ]
+}

@@ -1,34 +1,34 @@
 import React, {Component} from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, Input } from 'reactstrap';
 import Dropify from '../../../../../commons/dropify/dropify';
+import LazadaInput from '../../../../../commons/lazada-input/lazada-input';
+import TableWithItemPattern from '../../../../../commons/table-with-item-pattern/table-with-item-pattern';
+import VariationValueTableItem from './variation-value-table-item';
+import {make_empty_variation_value} from './general-init-product-form';
 import {safeRetrieve as sr} from '../../../../../utils/retrieve-value-utils';
 import add_image from '../../../../../assets/images/normal-use/add-image.svg';
 import './list-image.scss'
 
 class ListImage extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
             modal: false,
-            images: [],
+            general_product: props.general_product,
         };
         // Constructor
-    }
-
-    componentDidMount() {
-        this.setState({
-            images: this.props.product.images,
-        })
+        this.handle_change_general_form = this.handle_change_general_form.bind(this);
     }
 
     componentDidUpdate(prev_props, prev_state) {
         if (prev_state.modal !== this.state.modal) {
             if (this.state.modal) {
                 this.setState({
-                    images: this.props.product.images,
+                    general_product: this.props.general_product
                 })
             } else {
-                this.props.on_change_general(this.state.images)
+                this.props.on_change_general(this.state.general_product);
             }
         }
     }
@@ -37,49 +37,82 @@ class ListImage extends Component {
         this.setState({modal: !this.state.modal});
     };
 
-    addImage(url) {
-        const images = this.state.images.slice();
-        images.push(url);
-        this.setState({
-            images: images,
-        })
+    // addImage(url) {
+    //     const images = this.state.images.slice();
+    //     images.push(url);
+    //     this.setState({
+    //         images: images,
+    //     })
+    // }
+
+    // updateImage(index, url) {
+    //     const images = this.state.images.slice();
+    //     images[index] = url;
+    //     this.setState({
+    //         images: images,
+    //     })
+    // }
+
+    // removeImage(index) {
+    //     const images = this.state.images.slice();
+    //     images.splice(index, 1);
+    //     this.setState({
+    //         images: images,
+    //     });
+    // }
+
+    get_variation_table_titles() {
+        const {general_product} = this.props;
+        const fixed_titles_1 = ['Seller SKU', 'Số lượng', 'Giá gốc', 'Giá bán']
+        const fixed_titles_2 = ['']
+        const volatile_titles = [];
+        if (sr(general_product, ['variation_attributes', '0', 'name'])) {
+            volatile_titles.push(general_product.variation_attributes[0].name);
+        }
+        if (sr(general_product, ['variation_attributes', '1', 'name'])) {
+            volatile_titles.push(general_product.variation_attributes[1].name);
+        }
+        return fixed_titles_1.concat(volatile_titles).concat(fixed_titles_2);
     }
 
-    updateImage(index, url) {
-        const images = this.state.images.slice();
-        images[index] = url;
-        this.setState({
-            images: images,
-        })
-    }
+    handle_change_general_form(path, value) {
+        const {general_product} = this.state;
+        const new_product = Object.assign({}, general_product);
+        let setter = new_product;
+        for (let i = 0; i < path.length; i += 1) {
+            if (i === path.length - 1) {
+                setter[path[i]] = value;
+            } else {
+                setter[path[i]] = setter[path[i]] || {};
+            }
+            setter = setter[path[i]]
+        }
 
-    removeImage(index) {
-        const images = this.state.images.slice();
-        images.splice(index, 1);
         this.setState({
-            images: images,
-        });
+            general_product: new_product
+        })
     }
 
     render() {
         const {
-            buttonLabel,
+            editmode,
             className,
         } = this.props;
-        // const images = product.images;
+        
         const {
             modal,
-            images,
+            general_product,
         } = this.state;
+        console.log(general_product);
+        const images = sr(general_product, ['images']);
 
         return (
             <div className='text-center'>
-                {/* <Button color="danger" onClick={this.toggle}>{buttonLabel}</Button> */}
                 <button className="btn btn-outline-info waves-effect p-2 rounded" onClick={this.toggle}>
                     <img src={add_image} alt="add-image" style={{'width': '24px'}} />
                 </button>
                 <Modal isOpen={modal} toggle={this.toggle} className={className} size="lg" >
-                    <ModalHeader toggle={this.toggle}>Modal title</ModalHeader>
+                    <ModalHeader toggle={this.toggle}>Thông tin chi tiết sản phẩm</ModalHeader>
                     <ModalBody>
                         <div className="list-image">
                             {
@@ -88,8 +121,8 @@ class ListImage extends Component {
                                         <div key={index}>
                                             <Dropify
                                                 default_url={image}
-                                                on_change_general={url => this.updateImage(index, url)}
-                                                on_removed={() => this.removeImage(index)}
+                                                on_change_general={url => this.handle_change_general_form(['images', index], url)}
+                                                on_removed={() => this.handle_change_general_form(['images', index], '')}
                                             />
                                         </div>
                                     ))
@@ -98,29 +131,146 @@ class ListImage extends Component {
                             <div>
                                 <Dropify
                                     default_url={null}
-                                    on_change_general={url => {this.addImage(url)}} 
-                                    // on_removed={() => on_removed(images.length)}
+                                    on_change_general={url => {this.handle_change_general_form(['images', images.length], url)}} 
+                                    on_removed={() => {}}
                                 />
                             </div>
                         </div>
 
-                        {/* {
-                            ['0', '1', '2', '3', '4'].map(i => (
-                                <Dropify key={i}
-                                    default_url={sr(images, ['images', i])}
-                                    on_change_general={url => this.updateImage(i, url)}
-                                    on_removed={() => this.removeImage(i)}
+                        <div>
+                            <FormGroup>
+                                <Label for="gp_sellersku" className="required-field">Seller SKU</Label>
+                                <Input 
+                                    type="text" id="gp_sellersku" 
+                                    value={sr(general_product, ['seller_sku'])}
+                                    onChange={e => {this.handle_change_general_form(['seller_sku'], e.target.value)}} 
                                 />
-                            ))
-                        } */}
+                            </FormGroup>
 
-                        
+                            <div className='mb-5 attributes-group-1'>
+                                <FormGroup>
+                                    <Label for="gp_package_width" className="required-field">Package width (cm)</Label>
+                                    <Input 
+                                        type="number" id="gp_package_width" 
+                                        value={sr(general_product, ['package_width'])}
+                                        onChange={e => {this.handle_change_general_form(['package_width'], e.target.value)}} 
+                                    />
+                                </FormGroup>
+                                <FormGroup>
+                                    <Label for="gp_package_length" className="required-field">Package length (cm)</Label>
+                                    <Input 
+                                        type="number" id="gp_package_length" 
+                                        value={sr(general_product, ['package_length'])}
+                                        onChange={e => {this.handle_change_general_form(['package_length'], e.target.value)}} 
+                                    />
+                                </FormGroup>
+                                <FormGroup>
+                                    <Label for="gp_package_height" className="required-field">Package height (cm)</Label>
+                                    <Input 
+                                        type="number" id="gp_package_height" 
+                                        value={sr(general_product, ['package_height'])}
+                                        onChange={e => {this.handle_change_general_form(['package_height'], e.target.value)}} 
+                                    />
+                                </FormGroup>
+                                <FormGroup>
+                                    <Label for="gp_package_weight" className="required-field">Package weight (kg)</Label>
+                                    <Input 
+                                        type="number" id="gp_package_weight" 
+                                        value={sr(general_product, ['package_weight'])}
+                                        onChange={e => {this.handle_change_general_form(['package_weight'], e.target.value)}} 
+                                    />
+                                </FormGroup>
+                            </div>
+
+                            <div className="mb-5 attributes-group-2">
+                                <FormGroup>
+                                    <Label for="gp_variation_attribute_1_name" className="required-field">Variation attribute 1 - Name</Label>
+                                    <Input 
+                                        type="text" id="gp_variation_attribute_1_name" 
+                                        disabled={editmode}
+                                        value={sr(general_product, ['variation_attributes', '0', 'name'])}
+                                        onChange={e => {this.handle_change_general_form(['variation_attributes', '0', 'name'], e.target.value)}} 
+                                    />
+                                </FormGroup>
+                                <FormGroup>
+                                    <Label for="gp_variation_attribute_1_options" className="required-field">
+                                        Variation attribute 1 - Options - separated by comma ","
+                                    </Label>
+                                    <Input 
+                                        type="text" id="gp_variation_attribute_1_options" 
+                                        disabled={editmode}
+                                        value={sr(general_product, ['variation_attributes', '0', 'options']).join(', ')}
+                                        onChange={e => {
+                                            this.handle_change_general_form(['variation_attributes', '0', 'options'], e.target.value.trim().split(/\s*,\s*/))
+                                        }} 
+                                    />
+                                </FormGroup>
+                                <FormGroup>
+                                    <Label for="gp_variation_attribute_2_name" className="required-field">Variation attribute 2 - Name</Label>
+                                    <Input 
+                                        type="text" id="gp_variation_attribute_2_name" 
+                                        disabled={editmode}
+                                        value={sr(general_product, ['variation_attributes', '1', 'name'])}
+                                        onChange={e => {this.handle_change_general_form(['variation_attributes', '1', 'name'], e.target.value)}} 
+                                    />
+                                </FormGroup>
+                                <FormGroup>
+                                    <Label for="gp_variation_attribute_2_options" className="required-field">
+                                        Variation attribute 2 - Options - separated by comma ","
+                                    </Label>
+                                    <Input 
+                                        type="text" id="gp_variation_attribute_2_options" 
+                                        disabled={editmode}
+                                        value={sr(general_product, ['variation_attributes', '1', 'options']).join(', ')}
+                                        onChange={e => {
+                                            this.handle_change_general_form(['variation_attributes', '1', 'options'], e.target.value.trim().split(/\s*,\s*/))
+                                        }} 
+                                    />
+                                </FormGroup>
+                            </div>
+
+                            <div className="mb-5">
+                                {
+                                    editmode
+                                        ? null
+                                        : <FormGroup>
+                                            <Button 
+                                                color="primary" 
+                                                onClick={e => {
+                                                    this.handle_change_general_form(
+                                                        ['variation_values'], 
+                                                        [...sr(general_product, ['variation_values']), make_empty_variation_value()]
+                                                    )
+                                                }}
+                                                className='py-2 font-weight-bold'
+                                            >
+                                                <i className="fa fa-plus" /> Thêm biến thể
+                                            </Button>
+                                        </FormGroup>
+                                }
+                                <div className="table-responsive">
+                                    <TableWithItemPattern
+                                        bordered striped
+                                        className="variation-values-table"
+                                        titles={this.get_variation_table_titles()}
+                                        items={sr(general_product, ['variation_values'])}
+                                        itemPattern={VariationValueTableItem}
+                                        itemKeyGen={item => item.id}
+                                        itemProps={{
+                                            editmode,
+                                            variation_attributes: sr(general_product, ['variation_attributes']),
+                                            variation_values: sr(general_product, ['variation_values']),
+                                            on_change_general: this.handle_change_general_form,
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </ModalBody>
                 </Modal>
             </div>
         );
     }
 }
-
 
 export default ListImage;

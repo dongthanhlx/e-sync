@@ -93,6 +93,8 @@ export default class LazadaNewProduct extends Component {
         }
 
         if (prev_props.general_product.images.length !== this.props.general_product.images.length) {
+            console.log(prev_props.general_product.images);
+            console.log(this.props.general_product.images);
             this.updateSlider(prev_props.general_product.images, this.props.general_product.images);
         }
     }
@@ -119,22 +121,8 @@ export default class LazadaNewProduct extends Component {
     }
 
     updateSlider(oldImages, newImages) {
-        this.removeAll(oldImages);
+        // this.removeAll(oldImages);
         this.addAll(newImages);
-    }
-
-    get_variation_table_titles() {
-        const {general_product} = this.props;
-        const fixed_titles_1 = ['Seller SKU', 'Quantity', 'Original price', 'Sell price']
-        const fixed_titles_2 = ['Delete']
-        const volatile_titles = [];
-        if (sr(general_product, ['variation_attributes', '0', 'name'])) {
-            volatile_titles.push(general_product.variation_attributes[0].name);
-        }
-        if (sr(general_product, ['variation_attributes', '1', 'name'])) {
-            volatile_titles.push(general_product.variation_attributes[1].name);
-        }
-        return fixed_titles_1.concat(volatile_titles).concat(fixed_titles_2);
     }
 
     async api_get_lazada_category_tree() {
@@ -198,21 +186,22 @@ export default class LazadaNewProduct extends Component {
     }
 
     render() {
-        console.log('------------ render lazada -----------');
         const {
-            product, 
             additional_fields, 
             editmode, 
             images_key, 
             general_product, 
+            product,
             activeTab,
             editorKey,
+            on_change_general,
         } = this.props;
-        const images = sr(general_product, ['images']);
+        // console.log(general_product);
         const {category_tree, brands} = this.state;
         const normal_fields = additional_fields.filter(f => f.attribute_type === 'normal');
         const sku_fields = additional_fields.filter(f => f.attribute_type === 'sku');
         const variations = product.Skus[0].Sku;
+
         return (
             <div className="lazada-new-product container px-0">
                 <FormGroup className="mb-0">
@@ -233,19 +222,19 @@ export default class LazadaNewProduct extends Component {
 
                         <div className="slider-nav"></div>
 
-                        <ListImage 
-                            buttonLabel='Edit Image'
-                            product={general_product}
-                            on_change_general={(images) => {this.handle_change_general_form(['images'], images)}} 
+                        <ListImage
+                            editmode={editmode}
+                            general_product={general_product}
+                            on_change_general={(general_product) => {on_change_general(general_product)}} 
                         />
                     </Col>
 
                     <Col xs='5' className='mt-3'>
                         <div className='border-bottom'>
-                            <div class="md-form">
+                            <div className="md-form">
                                 <textarea 
                                     id="textarea-char-counter" 
-                                    class="form-control md-textarea border-bottom-0 gp_name" 
+                                    className="form-control md-textarea border-bottom-0 gp_name" 
                                     length="120" 
                                     onChange={e => {this.handle_change_general_form(['name'], e.target.value)}}
                                     value={sr(general_product, ['name'])}
@@ -286,20 +275,20 @@ export default class LazadaNewProduct extends Component {
                         </div>
 
                         <div className="mt-4 border-bottom">
-                            <div class="md-form input-with-post-icon w-50 my-0">
+                            <div className="md-form input-with-post-icon w-50 my-0">
                                 <input 
                                     type="number" 
-                                    class="form-control sell_price border-bottom-0 my-0"  
+                                    className="form-control sell_price border-bottom-0 my-0"  
                                     value={sr(general_product, ['sell_price'])}
                                     onChange={e => {this.handle_change_general_form(['sell_price'], e.target.value)}} 
                                     placeholder='Giá bán'
                                 />
                             </div>
 
-                            <div class="md-form input-with-post-icon w-25 my-0">
+                            <div className="md-form input-with-post-icon w-25 my-0">
                                 <input 
                                     type="number" 
-                                    class="form-control original_price border-bottom-0 text-muted" 
+                                    className="form-control original_price border-bottom-0 text-muted" 
                                     value={sr(general_product, ['original_price'])}
                                     onChange={e => {this.handle_change_general_form(['original_price'], e.target.value)}} 
                                     placeholder='Giá gốc'
@@ -321,10 +310,10 @@ export default class LazadaNewProduct extends Component {
                             <Row>
                                 <Col xs='3' className="text-muted">Số lượng</Col>
                                 <Col className='px-0'>
-                                    <div class="def-number-input number-input safari_only btn-light">
-                                        <button onClick={(e) => {e.target.parentNode.querySelector('input[type=number]').stepDown()}} class="minus"></button>
+                                    <div className="def-number-input number-input safari_only btn-light">
+                                        <button onClick={(e) => {e.target.parentNode.querySelector('input[type=number]').stepDown()}} className="minus"></button>
                                         <input 
-                                            class="quantity" 
+                                            className="quantity" 
                                             min="0" 
                                             name="quantity" 
                                             value={sr(general_product, ['quantity'])} 
@@ -332,7 +321,7 @@ export default class LazadaNewProduct extends Component {
                                             placeholder='1'
                                             onChange={e => {this.handle_change_general_form(['quantity'], e.target.value)}} 
                                         />
-                                        <button onClick={(e) => {e.target.parentNode.querySelector('input[type=number]').stepUp()}} class="plus"></button>
+                                        <button onClick={(e) => {e.target.parentNode.querySelector('input[type=number]').stepUp()}} className="plus"></button>
                                     </div>
                                 </Col>
                             </Row>
@@ -441,7 +430,6 @@ export default class LazadaNewProduct extends Component {
 
                     <FormGroup>
                         <Editor
-                            // key='1'
                             type='legacy'
                             design={sr(general_product, ['short_description'])}
                             on_change_general={description => {this.handle_change_general_form(['short_description'], description)}}
@@ -451,8 +439,7 @@ export default class LazadaNewProduct extends Component {
 
                     <FormGroup className="mb-5">
                         <Editor
-                            key={editorKey}
-                            // key='2'
+                            // key={editorKey}
                             design={sr(general_product, ['description'])}
                             on_change_general={description => {this.handle_change_general_form(['description'], description)}}
                             on_change_html_general={description => {this.handle_change_general_form(['html__description'], description)}}
@@ -460,155 +447,98 @@ export default class LazadaNewProduct extends Component {
                     </FormGroup>
                 </div>
 
-                <div>
-                    <FormGroup>
-                        <Label for="gp_sellersku" className="required-field">Seller SKU</Label>
-                        <Input 
-                            type="text" id="gp_sellersku" 
-                            value={sr(general_product, ['seller_sku'])}
-                            onChange={e => {this.handle_change_general_form(['seller_sku'], e.target.value)}} 
-                        />
-                    </FormGroup>
-
-                    <div className='mb-5 attributes-group-1'>
-                        <FormGroup>
-                            <Label for="gp_package_width" className="required-field">Package width (cm)</Label>
-                            <Input 
-                                type="number" id="gp_package_width" 
-                                value={sr(general_product, ['package_width'])}
-                                onChange={e => {this.handle_change_general_form(['package_width'], e.target.value)}} 
-                            />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="gp_package_length" className="required-field">Package length (cm)</Label>
-                            <Input 
-                                type="number" id="gp_package_length" 
-                                value={sr(product, ['package_length'])}
-                                onChange={e => {this.handle_change_general_form(['package_length'], e.target.value)}} 
-                            />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="gp_package_height" className="required-field">Package height (cm)</Label>
-                            <Input 
-                                type="number" id="gp_package_height" 
-                                value={sr(general_product, ['package_height'])}
-                                onChange={e => {this.handle_change_general_form(['package_height'], e.target.value)}} 
-                            />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="gp_package_weight" className="required-field">Package weight (kg)</Label>
-                            <Input 
-                                type="number" id="gp_package_weight" 
-                                value={sr(general_product, ['package_weight'])}
-                                onChange={e => {this.handle_change_general_form(['package_weight'], e.target.value)}} 
-                            />
-                        </FormGroup>
-                    </div>
-
-                    {
-                        Array.isArray(normal_fields) && normal_fields.length > 0
-                            ? <div className="mb-5 additional-normal-attributes">
-                                {
-                                    normal_fields.sort((a, b) => parseInt(b.is_mandatory) - parseInt(a.is_mandatory)).map(field => (
-                                        <FormGroup key={field.name}>
-                                            <Label for={`lp_${field.name}`} className={field.is_mandatory ? 'required-field' : ''}>
-                                                {field.label}
-                                            </Label>
-                                            <LazadaInput 
-                                                type={field.input_type} 
-                                                value={sr(product, LazadaNewProduct.make_attribute_path(field)) || ''} 
-                                                on_change={value => {this.handle_change_form(LazadaNewProduct.make_attribute_path(field), value)}} 
-                                                options={field.options} 
-                                            />
-                                        </FormGroup>
-                                    ))
-                                }
-                            </div>
-                            : null
-                    }
-
-                    <div className="mb-5 attributes-group-2">
-                        <FormGroup>
-                            <Label for="gp_variation_attribute_1_name" className="required-field">Variation attribute 1 - Name</Label>
-                            <Input 
-                                type="text" id="gp_variation_attribute_1_name" 
-                                disabled={editmode}
-                                value={sr(general_product, ['variation_attributes', '0', 'name'])}
-                                onChange={e => {this.handle_change_general_form(['variation_attributes', '0', 'name'], e.target.value)}} 
-                            />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="gp_variation_attribute_1_options" className="required-field">
-                                Variation attribute 1 - Options - separated by comma ","
-                            </Label>
-                            <Input 
-                                type="text" id="gp_variation_attribute_1_options" 
-                                disabled={editmode}
-                                value={sr(general_product, ['variation_attributes', '0', 'options']).join(', ')}
-                                onChange={e => {
-                                    this.handle_change_general_form(['variation_attributes', '0', 'options'], e.target.value.trim().split(/\s*,\s*/))
-                                }} 
-                            />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="gp_variation_attribute_2_name" className="required-field">Variation attribute 2 - Name</Label>
-                            <Input 
-                                type="text" id="gp_variation_attribute_2_name" 
-                                disabled={editmode}
-                                value={sr(general_product, ['variation_attributes', '1', 'name'])}
-                                onChange={e => {this.handle_change_general_form(['variation_attributes', '1', 'name'], e.target.value)}} 
-                            />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="gp_variation_attribute_2_options" className="required-field">
-                                Variation attribute 2 - Options - separated by comma ","
-                            </Label>
-                            <Input 
-                                type="text" id="gp_variation_attribute_2_options" 
-                                disabled={editmode}
-                                value={sr(general_product, ['variation_attributes', '1', 'options']).join(', ')}
-                                onChange={e => {
-                                    this.handle_change_general_form(['variation_attributes', '1', 'options'], e.target.value.trim().split(/\s*,\s*/))
-                                }} 
-                            />
-                        </FormGroup>
-                    </div>
-
-                    <div className="mb-5">
-                        {
-                            editmode
-                                ? null
-                                : <FormGroup>
-                                    <Button 
-                                        color="primary" 
-                                        onClick={e => {
-                                            this.handle_change_general_form(
-                                                ['variation_values'], 
-                                                [...sr(general_product, ['variation_values']), make_empty_variation_value()]
-                                            )
-                                        }}
-                                    >
-                                        <i className="fa fa-plus" /> Add more variation
-                                    </Button>
-                                </FormGroup>
-                        }
-                        <div className="table-responsive">
-                            <TableWithItemPattern
-                                bordered striped
-                                className="variation-values-table"
-                                titles={this.get_variation_table_titles()}
-                                items={sr(general_product, ['variation_values'])}
-                                itemPattern={VariationValueTableItem}
-                                itemKeyGen={item => item.id}
-                                itemProps={{
-                                    editmode,
-                                    variation_attributes: sr(general_product, ['variation_attributes']),
-                                    variation_values: sr(general_product, ['variation_values']),
-                                    on_change_general: this.handle_change_general_form,
-                                }}
-                            />
+                {
+                    Array.isArray(normal_fields) && normal_fields.length > 0
+                        ? <div className="mb-5 additional-normal-attributes">
+                            {
+                                normal_fields.sort((a, b) => parseInt(b.is_mandatory) - parseInt(a.is_mandatory)).map(field => (
+                                    <FormGroup key={field.name}>
+                                        <Label for={`lp_${field.name}`} className={field.is_mandatory ? 'required-field' : ''}>
+                                            {field.label}
+                                        </Label>
+                                        <LazadaInput 
+                                            type={field.input_type} 
+                                            value={sr(product, LazadaNewProduct.make_attribute_path(field)) || ''} 
+                                            on_change={value => {this.handle_change_form(LazadaNewProduct.make_attribute_path(field), value)}} 
+                                            options={field.options} 
+                                        />
+                                    </FormGroup>
+                                ))
+                            }
                         </div>
+                        : null
+                }
+
+                <div className="mb-5 lazada-variations-table">
+                    <div className="tr">
+                        <div className="th">Seller SKU</div>
+                        <div className="th">Variation fields</div>
                     </div>
+                    {
+                        variations.map((variation, index) => (
+                            <div key={variation.id} className="tr">
+                                <div className="td sku-cell">{variation.SellerSku}</div>
+                                <div className="td variation-fields-cell">
+                                    <FormGroup>
+                                        <Label for="lp_special_from_date" className="required-field">Special price from date</Label>
+                                        <DatePicker 
+                                            withTime
+                                            value={moment(sr(variation, ['special_from_date'])).valueOf()}
+                                            onChange={value => {
+                                                this.handle_change_form(
+                                                    ['Skus', '0', 'Sku', index, 'special_from_date'], 
+                                                    moment(value).format('YYYY-MM-DD HH:mm')
+                                                )
+                                            }}
+                                        />
+                                    </FormGroup>
+                                    <FormGroup>
+                                        <Label for="lp_special_to_date" className="required-field">Special price to date</Label>
+                                        <DatePicker 
+                                            withTime
+                                            value={moment(sr(variation, ['special_to_date'])).valueOf()}
+                                            onChange={value => {
+                                                this.handle_change_form(
+                                                    ['Skus', '0', 'Sku', index, 'special_to_date'],
+                                                    moment(value).format('YYYY-MM-DD HH:mm'))
+                                            }}
+                                        />
+                                    </FormGroup>
+                                    <FormGroup>
+                                        <Label for="lp_package_content" className="required-field">Package content</Label>
+                                        <Input 
+                                            type="text"
+                                            value={sr(variation, ['package_content'])}
+                                            onChange={e => {this.handle_change_form(['Skus', '0', 'Sku', index, 'package_content'], e.target.value)}} 
+                                        />
+                                    </FormGroup>
+                                    {
+                                        Array.isArray(sku_fields) && sku_fields.length > 0
+                                            ? <>
+                                                {
+                                                    sku_fields.sort((a, b) => parseInt(b.is_mandatory) - parseInt(a.is_mandatory)).map(field => (
+                                                        <FormGroup key={field.name}>
+                                                            <Label for={`lp_${field.name}`} className={field.is_mandatory ? 'required-field' : ''}>
+                                                                {field.label}
+                                                            </Label>
+                                                            <LazadaInput
+                                                                type={field.input_type}
+                                                                value={sr(product, LazadaNewProduct.make_attribute_path(field, index)) || ''} 
+                                                                on_change={value => {
+                                                                    this.handle_change_form(LazadaNewProduct.make_attribute_path(field, index), value)
+                                                                }} 
+                                                                options={field.options} 
+                                                            />
+                                                        </FormGroup>
+                                                    ))
+                                                }
+                                            </>
+                                            : null
+                                    }
+                                </div>
+                            </div>
+                        ))
+                    }
                 </div>
             </div>
         )

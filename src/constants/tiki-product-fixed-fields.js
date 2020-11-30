@@ -4,7 +4,7 @@ export const TIKI_PRODUCT_FIXED_FIELDS = {
     product_width: true,
     product_length: true,
     product_height: true,
-    product_weight: true,
+    product_weight_kg: true,
     bulky: true,
     "": true
 };

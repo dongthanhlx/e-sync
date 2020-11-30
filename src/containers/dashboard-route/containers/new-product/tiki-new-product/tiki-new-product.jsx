@@ -83,23 +83,6 @@ export default class TikiNewProduct extends Component {
     componentDidUpdate(prev_props) {
         TikiNewProduct.re_align_variations_table(this.props.product.option_attributes);
 
-        $('.slider-for').not('.slick-initialized').slick({
-            slidesToShow: 1,
-            slidesToScroll: 1,
-            arrows: false,
-            fade: true,
-            asNavFor: '.slider-nav'
-        });
-
-        $('.slider-nav').not('.slick-initialized').slick({
-            slidesToShow: 3,
-            slidesToScroll: 1,
-            asNavFor: '.slider-for',
-            arrows: false,
-            centerMode: true,
-            focusOnSelect: true
-        });
-        
         if (prev_props.general_product.images.length !== this.props.general_product.images.length) {
             this.updateSlider(prev_props.general_product.images, this.props.general_product.images);
         }
@@ -129,7 +112,7 @@ export default class TikiNewProduct extends Component {
     }
 
     updateSlider(oldImages, newImages) {
-        this.removeAll(oldImages);
+        // this.removeAll(oldImages);
         this.addAll(newImages);
     }
 
@@ -192,8 +175,10 @@ export default class TikiNewProduct extends Component {
             additional_fields, 
             general_product,
             editorKey,
+            editmode,
+            on_change_general
         } = this.props;
-        const images = sr(this.props.general_product, ['images']);
+        
         const {category_tree} = this.state;
         return (
             <div className="tiki-new-product container px-0">
@@ -216,9 +201,9 @@ export default class TikiNewProduct extends Component {
                         <div className="slider-nav"></div>
 
                         <ListImage 
-                            buttonLabel='Edit Image'
-                            product={general_product}
-                            on_change_general={(images) => {this.handle_change_general_form(['images'], images)}} 
+                            editmode={editmode}
+                            general_product={general_product}
+                            on_change_general={(general_product) => {on_change_general(general_product)}} 
                         />
                     </div>
 
@@ -254,7 +239,7 @@ export default class TikiNewProduct extends Component {
                                     <div className="md-form my-0">
                                         <textarea 
                                             id="textarea-char-counter" 
-                                            class="form-control md-textarea border-bottom-0 gp_name" 
+                                            className="form-control md-textarea border-bottom-0 gp_name" 
                                             length="120" 
                                             value={sr(general_product, ['name'])}
                                             onChange={e => {this.handle_change_general_form(['name'], e.target.value)}}
@@ -300,10 +285,10 @@ export default class TikiNewProduct extends Component {
                                             <InputGroupAddon addonType="prepend">₫</InputGroupAddon>
                                         </InputGroup> */}
 
-                                        <div class="md-form my-0">
+                                        <div className="md-form my-0">
                                             <input 
                                                 type="number" 
-                                                class="form-control sell_price border-bottom-0 my-0"  
+                                                className="form-control sell_price border-bottom-0 my-0"  
                                                 value={sr(general_product, ['sell_price'])}
                                                 onChange={e => {this.handle_change_general_form(['sell_price'], e.target.value)}} 
                                                 placeholder='Giá bán'
@@ -322,12 +307,12 @@ export default class TikiNewProduct extends Component {
                                             />
                                             <InputGroupAddon addonType="prepend">₫</InputGroupAddon>
                                         </InputGroup> */}
-                                        <div class="md-form my-0">
+                                        <div className="md-form my-0">
                                             <input 
                                                 type="number" 
-                                                class="form-control origin_price border-bottom-0 my-0"  
-                                                value={sr(general_product, ['origin_price'])}
-                                                onChange={e => {this.handle_change_general_form(['origin_price'], e.target.value)}} 
+                                                className="form-control original_price border-bottom-0 my-0"  
+                                                value={sr(general_product, ['original_price'])}
+                                                onChange={e => {this.handle_change_general_form(['original_price'], e.target.value)}} 
                                                 placeholder='Giá gốc'
                                             />
                                         </div>
@@ -374,10 +359,10 @@ export default class TikiNewProduct extends Component {
                                             </InputGroupAddon>
                                         </InputGroup> */}
 
-                                        <div class="def-number-input number-input safari_only">
-                                            <button onClick={(e) => {e.target.parentNode.querySelector('input[type=number]').stepDown()}} class="minus"></button>
+                                        <div className="def-number-input number-input safari_only">
+                                            <button onClick={(e) => {e.target.parentNode.querySelector('input[type=number]').stepDown()}} className="minus"></button>
                                             <input 
-                                                class="quantity font-weight-bold" 
+                                                className="quantity font-weight-bold" 
                                                 min="0" 
                                                 name="quantity" 
                                                 value={sr(general_product, ['quantity'])} 
@@ -385,7 +370,7 @@ export default class TikiNewProduct extends Component {
                                                 placeholder='1'
                                                 onChange={e => {this.handle_change_general_form(['quantity'], e.target.value)}} 
                                             />
-                                            <button onClick={(e) => {e.target.parentNode.querySelector('input[type=number]').stepUp()}} class="plus"></button>
+                                            <button onClick={(e) => {e.target.parentNode.querySelector('input[type=number]').stepUp()}} className="plus"></button>
                                         </div>
                                     </FormGroup>
 

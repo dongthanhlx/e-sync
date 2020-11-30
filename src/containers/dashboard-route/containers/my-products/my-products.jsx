@@ -47,16 +47,6 @@ export default class MyProducts extends Component {
         }
     }
 
-    // async api_get_list_products(product_name) {
-    //     try {
-    //         const products = await get_list_products();
-    //         this.setState({products});
-    //     } catch (err) {
-    //         console.error(err);
-    //         noti('error', err);
-    //     }
-    // }
-
     async api_delete_product(product_id) {
         try {
             await delete_product(product_id);
@@ -85,15 +75,15 @@ export default class MyProducts extends Component {
         const {products, selected_product, is_open_detail_modal} = this.state;
         return (
             <MainContent className="my-products">
-                <form class="form-inline d-flex justify-content-center md-form form-sm">
+                <form className="form-inline d-flex justify-content-center md-form form-sm">
                     <input 
-                        class="form-control form-control-sm mr-3 w-50" 
+                        className="form-control form-control-sm mr-3 w-50" 
                         type="text" 
                         placeholder="Tìm kiếm với tên sản phẩm"
                         aria-label="Search" 
                         onChange={e => this.api_get_list_products(e.target.value)}
                     />
-                    <i class="fas fa-search" aria-hidden="true"></i>
+                    <i className="fas fa-search" aria-hidden="true"></i>
                 </form>      
 
                 <SortableTableWithItemPattern
@@ -123,7 +113,7 @@ function MyProductsTableItem({item, index, on_show_detail, on_delete}) {
         <tr>
             <th scope='row'>{index + 1}</th>
             <td><ThumbnailImage src={item.image}/></td>
-            <td><button className="btn z-depth-0 my-0" onClick={e => {on_show_detail(item)}}>{item.name}</button></td>
+            <td><button className="btn z-depth-0 my-0 px-2" onClick={e => {on_show_detail(item)}}>{item.name}</button></td>
             <td>
                 {
                     item.lock_content
@@ -139,17 +129,13 @@ function MyProductsTableItem({item, index, on_show_detail, on_delete}) {
             <td>
                 <div className="d-flex">
                     <Link to={`/dashboard/my-products/edit-product?${stringify({product_id: item._id})}`}>
-                        {/* <Button size="sm" className="ml-1">
-                            <i className="fa fa-edit" />
-                        </Button> */}
-
                         <button className="btn btn-default btn-rounded btn-sm px-2">
-                            <i class="fas fa-pencil-alt mt-0"></i>
+                            <i className="fas fa-pencil-alt mt-0"></i>
                         </button>
                     </Link>
                     
-                    <button className="btn btn-danger btn-rounded btn-sm px-2">
-                        <i class="far fa-trash-alt mt-0"></i>
+                    <button className="btn btn-danger btn-rounded btn-sm px-2" onClick={e => {on_delete(item)}}>
+                        <i className="far fa-trash-alt mt-0"></i>
                     </button>
                 </div>
             </td>

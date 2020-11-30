@@ -4,31 +4,34 @@ export function make_tiki_init_product_form() {
     return {
         category_id: '',
         name: '',
-        market_price: '',
         description: '',
-        image: '',
-        images: [],
+        market_price: '',
         attributes: {
-            brand: '',
+            bulky: 1,
             product_top_features: '',
+            brand: '',
             product_width: 0,
             product_length: 0,
             product_height: 0,
-            product_weight: 0,
-            bulky: 1,
+            product_weight_kg: 0,
         },
+        image: '',
+        images: [],
         option_attributes: [],
         variants: [
             {
                 id: uuidv4(),
                 sku: '',
+                price: '',
                 quantity: '',
                 market_price: '',
-                price: '',
                 option1: '',
                 option2: '',
                 inventory_type: '',
                 supplier: '',
+                brand_origin: '',
+                image: '',
+                images: [],
             }
         ],
     }
@@ -36,8 +39,9 @@ export function make_tiki_init_product_form() {
 
 export function make_tiki_publish_payload(tiki_product_after_sync) {
     const tiki_product_payload = JSON.parse(JSON.stringify(tiki_product_after_sync));
-    const {variants} = tiki_product_payload;
+    const {variants, attributes} = tiki_product_payload;
     for (let va of variants) {
+        va.brand_origin = attributes.brand_origin;
         delete va.id;
     }
     return tiki_product_payload;
