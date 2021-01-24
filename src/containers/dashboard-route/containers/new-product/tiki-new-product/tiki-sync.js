@@ -82,7 +82,7 @@ export function general_variations_to_tiki_variants(tiki_variants, general_varia
             image: images[0],
             images: images.slice(1),
         };
-        const tiki_original_variant = tiki_variants_dict[variation_value.id] || {inventory_type: '', supplier: '', brand_origin: ''};
+        const tiki_original_variant = tiki_variants_dict[variation_value.id] || {inventory_type: 'instock', supplier: '', brand_origin: ''};
         tiki_variants_result.push({...tiki_original_variant, ...tiki_variant_from_general_variation});
     }
     return tiki_variants_result;

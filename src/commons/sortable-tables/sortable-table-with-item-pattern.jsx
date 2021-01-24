@@ -60,7 +60,7 @@ class SortableTableWithItemPattern extends Component {
                                         className={produceHeaderClassName(sortConfig, current_sort_config, is_ascending, i)}
                                         onClick={() => {this._handleSortForColumn(i)}}
                                     >
-                                        {title}
+                                        <b>{title}</b>
                                     </th>
                                 ))
                             }

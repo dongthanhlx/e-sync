@@ -51,6 +51,7 @@ class SideNav extends Component {
     render() {
         return (
             <div className="side-nav" style={{backgroundColor: '#4fc3f7'}}>
+                <a href="/"><h4 className="ml-5 font-weight-bold mb-3 mt-2 text-dark"><i>E-Sync</i></h4></a>
                 <Nav vertical>{
                     DASHBOARD_ANALYTIC_ROUTES().map(route => (
                         route.isNavItem ? (isParent(route) ? this._renderParentItem(route) : this._renderChildItem(route)) : null

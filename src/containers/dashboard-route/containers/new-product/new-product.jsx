@@ -66,6 +66,11 @@ export default class NewProduct extends Component {
             lazadaEditorKey: uuidv4(),
             tikiEditorKey: uuidv4(),
         };
+
+        this.save_general_product = this.state.general_product;
+        this.save_lazada_product = this.state.lazada_product;
+        this.save_tiki_product = this.state.tiki_product;
+
         this.handle_general_variations_change = this.handle_general_variations_change.bind(this);
         this.handle_publish = this.handle_publish.bind(this);
         this.next_tab = this.next_tab.bind(this);
@@ -201,11 +206,11 @@ export default class NewProduct extends Component {
             default:
                 break;
         }
+
         this.setState({current_active_tab});
     }
 
     handle_product_change(which_product, value) {
-        console.log(value);
         this.setState({[which_product]: value});
     }
 
@@ -232,8 +237,8 @@ export default class NewProduct extends Component {
     is_current_special_tab() {
         const {current_active_tab, create_for} = this.state;
         const result = {is_first: false, is_last: false};
-        const showable_tabs = [TABS.lazada, TABS.tiki, TABS.shopee].filter(tab => create_for[tab]);
-        if (current_active_tab === TABS.general) {
+        const showable_tabs = [TABS.lazada, TABS.tiki].filter(tab => create_for[tab]);
+        if (current_active_tab === TABS.lazada) {
             result.is_first = true;
         }
         if (current_active_tab === showable_tabs[showable_tabs.length - 1]) {
@@ -244,7 +249,7 @@ export default class NewProduct extends Component {
 
     next_tab() {
         const {current_active_tab, create_for} = this.state;
-        const showable_tabs = [TABS.general].concat([TABS.lazada, TABS.tiki, TABS.shopee].filter(tab => create_for[tab]));
+        const showable_tabs = [TABS.lazada].concat([TABS.tiki].filter(tab => create_for[tab]));
         const i = showable_tabs.findIndex(tab => tab === current_active_tab);
         const nexttab = i + 1 < showable_tabs.length ? showable_tabs[i + 1] : showable_tabs[showable_tabs.length - 1];
         this.setState({current_active_tab: nexttab});
@@ -252,7 +257,7 @@ export default class NewProduct extends Component {
 
     prev_tab() {
         const {current_active_tab, create_for} = this.state;
-        const showable_tabs = [TABS.general].concat([TABS.lazada, TABS.tiki, TABS.shopee].filter(tab => create_for[tab]));
+        const showable_tabs = [TABS.lazada].concat([TABS.tiki].filter(tab => create_for[tab]));
         const i = showable_tabs.findIndex(tab => tab === current_active_tab);
         const prevtab = i - 1 >= 0 ? showable_tabs[i - 1] : showable_tabs[0];
         this.setState({current_active_tab: prevtab});
@@ -297,7 +302,7 @@ export default class NewProduct extends Component {
             shopee_additional_fields, shopee_product,
             lazadaEditorKey, tikiEditorKey,
         } = this.state;
-        console.log(general_product);
+        
         const {is_first, is_last} = this.is_current_special_tab();
         return (
             <MainContent className="new-product">
@@ -367,7 +372,6 @@ export default class NewProduct extends Component {
                         create_for.lazada
                             ? <TabPane tabId={TABS.lazada} style={{'backgroundColor': '#eff0f5'}}>
                                 <LazadaNewProduct 
-                                    // images_key={general_images_key}
                                     editorKey={lazadaEditorKey}
                                     activeTab={current_active_tab}
                                     general_product={general_product}
@@ -384,7 +388,6 @@ export default class NewProduct extends Component {
                         create_for.tiki
                             ? <TabPane tabId={TABS.tiki} style={{'backgroundColor': 'rgb(239, 239, 239)'}} >
                                 <TikiNewProduct
-                                    // images_key={general_images_key}
                                     editorKey={tikiEditorKey}
                                     activeTab={current_active_tab}
                                     general_product={general_product}
@@ -410,15 +413,6 @@ export default class NewProduct extends Component {
                 </TabContent>
                 <div className="d-flex align-items-center justify-content-between publish">
                     <div className="d-flex">
-                        {/* <Button outline color="secondary" disabled={is_first} onClick={this.prev_tab}>
-                            <i className="fa fa-chevron-left" /> Back
-                            <img src={back_arrow} alt="back_arrow"/>
-                        </Button>
-                        <Button outline color="primary" className="ml-2" disabled={is_last} onClick={this.next_tab}>
-                            Next <i className="fa fa-chevron-right" />
-                            <img src={next_arrow} alt="next_arrow"/>
-                        </Button> */}
-
                         <button className="btn btn-default px-0 py-2 rounded-circle" disabled={is_first} onClick={this.prev_tab} style={{'width': '37px'}}>
                             <img src={back_arrow} alt="back_arrow" style={{'width': '21px'}} />
                         </button>
@@ -432,7 +426,7 @@ export default class NewProduct extends Component {
                         size="sm" color="primary" 
                         onClick={this.handle_publish}
                     >
-                        Publish
+                        Phát hành
                     </LoadingButton>
                 </div>
             </MainContent>

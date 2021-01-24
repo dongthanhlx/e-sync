@@ -1,7 +1,8 @@
+import { object, string } from 'prop-types';
 import React, { createRef } from 'react';
 import EmailEditor from 'react-email-editor';
-import {upload_static} from '../../api/upload-static';
-import {noti} from '../../services/noti-service';
+import { upload_static } from '../../api/upload-static';
+import { noti } from '../../services/noti-service';
 
 class Editor extends React.Component {
     constructor(props) {
@@ -21,19 +22,22 @@ class Editor extends React.Component {
 
     load() {
         const unlayer = this.emailEditorRef.current.editor;
-        const {type, design, on_change_general, on_change_html_general} = this.props;
+        const { type, design, on_change_general, on_change_html_general } = this.props;
+        // let new_design = JSON.stringify(design) === JSON.stringify("\"\"") ? null: design;
+        
+        if (unlayer === undefined) return;
 
         if (type === 'legacy') {
             unlayer.loadDesign({
-                html: design ? design: '<html><body></body></html>',
+                html: design ? design : '<html><body></body></html>',
                 classic: true,
             });
         } else {
-            design && unlayer.loadDesign(design)
+            if ((typeof design) !== 'string') unlayer.loadDesign(design);
         }
 
-        unlayer.addEventListener('design:updated', (data) => {
-            unlayer.exportHtml(function (data) {
+        unlayer.addEventListener('design:updated', () => {
+            unlayer.exportHtml((data) => {
                 if (type === 'legacy') {
                     on_change_general(data.html);
                 } else {
@@ -47,7 +51,7 @@ class Editor extends React.Component {
         unlayer.registerCallback('image', async function (file, done) {
             try {
                 const file_url = await upload_static(file.accepted[0]);
-                done({progress: 100, url: file_url});
+                done({ progress: 100, url: file_url });
             } catch (error) {
                 console.error('Unlayer upload file: ', error.message);
                 noti('error', 'Unlayer cannot upload file');
@@ -55,13 +59,13 @@ class Editor extends React.Component {
         })
     }
 
-    onLoad () {
-            this.timer = setTimeout(() => {
-                this.load()
-            }, 0);
+    onLoad() {
+        this.timer = setTimeout(() => {
+            this.load()
+        }, 0);
     }
 
-    render () {
+    render() {
         return (
             <div >
                 <EmailEditor
@@ -75,3 +79,4 @@ class Editor extends React.Component {
 }
 
 export default Editor;
+

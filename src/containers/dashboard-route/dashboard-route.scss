@@ -5,7 +5,8 @@
     .below-top-nav {
         display: grid;
         grid-template-columns: 15rem auto;
-        height: calc(100% - #{$top-nav-height} - #{$footer-height});
+        // height: calc(100% - #{$top-nav-height} - #{$footer-height});
+        height: calc(100% - #{$footer-height});
         .content-wrapper {
             overflow: hidden;
             // margin-bottom: 2rem;

@@ -53,6 +53,7 @@ export default class TikiNewProduct extends Component {
             category_tree: [],
             slider_for_key: uuidv4(),
             slider_nav_key: uuidv4(),
+            renderFlag: true,
         };
 
         this.updateSlider = this.updateSlider.bind(this);
@@ -80,12 +81,27 @@ export default class TikiNewProduct extends Component {
         });
     }
 
+    shouldComponentUpdate(nextProps) {
+        if (this.props.activeTab === nextProps.activeTab) {
+            return this.state.renderFlag;
+        }
+
+        return true;
+    }
+
+    isRerender(value) {
+        this.setState({
+            renderFlag: value
+        })
+    }
+
     componentDidUpdate(prev_props) {
         TikiNewProduct.re_align_variations_table(this.props.product.option_attributes);
+        
+        let old_images = sr(prev_props.general_product, ['images']);
+        let new_images = sr(this.props.general_product, ['images']);
 
-        if (prev_props.general_product.images.length !== this.props.general_product.images.length) {
-            this.updateSlider(prev_props.general_product.images, this.props.general_product.images);
-        }
+        this.updateSlider(old_images, new_images);
     }
 
     removeSlide(index) {
@@ -95,7 +111,7 @@ export default class TikiNewProduct extends Component {
 
     removeAll(images) {
         const length = images.length;
-        console.log(length);
+        
         if (length === 0) return;
         images.map((image, index) => this.removeSlide(length - index - 1))
     }
@@ -106,13 +122,12 @@ export default class TikiNewProduct extends Component {
     }
 
     addAll(images) {
-        console.log(images.length);
         if (images.length === 0) return;
         images.map(image => this.addSlide(image))
     }
 
     updateSlider(oldImages, newImages) {
-        // this.removeAll(oldImages);
+        this.removeAll(oldImages);
         this.addAll(newImages);
     }
 
@@ -150,10 +165,12 @@ export default class TikiNewProduct extends Component {
             }
             setter = setter[path[i]]
         }
+
+        this.isRerender(true);
         on_change(new_product);
     }
 
-    handle_change_general_form(path, value) {
+    handle_change_general_form(path, value, isRender = true) {
         const {general_product, on_change_general} = this.props;
         const new_product = Object.assign({}, general_product);
         let setter = new_product;
@@ -165,11 +182,12 @@ export default class TikiNewProduct extends Component {
             }
             setter = setter[path[i]]
         }
+
+        this.isRerender(isRender);
         on_change_general(new_product);
     }
 
     render() {
-        console.log('------------ render tiki -----------');
         const {
             product, 
             additional_fields, 
@@ -178,7 +196,7 @@ export default class TikiNewProduct extends Component {
             editmode,
             on_change_general
         } = this.props;
-        
+        console.log('render - tikiiiiiiiiiiii')
         const {category_tree} = this.state;
         return (
             <div className="tiki-new-product container px-0">
@@ -203,7 +221,7 @@ export default class TikiNewProduct extends Component {
                         <ListImage 
                             editmode={editmode}
                             general_product={general_product}
-                            on_change_general={(general_product) => {on_change_general(general_product)}} 
+                            on_change_general={(new_general_product) => {on_change_general(new_general_product); this.updateSlider(sr(general_product, ['images']), sr(new_general_product, ['images']))}} 
                         />
                     </div>
 
@@ -485,10 +503,10 @@ export default class TikiNewProduct extends Component {
 
                     <FormGroup className="mb-5 bg-white">
                         <Editor
-                            key={editorKey}
+                            // key={editorKey}
                             design={sr(general_product, ['description'])}
-                            on_change_general={description => {this.handle_change_general_form(['description'], description)}}
-                            on_change_html_general={description => {this.handle_change_general_form(['html__description'], description)}}
+                            on_change_general={description => {this.handle_change_general_form(['description'], description, false)}}
+                            on_change_html_general={description => {this.handle_change_general_form(['html__description'], description, false)}}
                         />
                     </FormGroup>
                 </div>

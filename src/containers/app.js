@@ -1,5 +1,5 @@
 import React, {Component, Fragment} from 'react';
-import {Switch, Redirect} from 'react-router-dom';
+import {BrowserRouter, Switch, Redirect} from 'react-router-dom';
 import {APP_ROUTES} from "./app-routes";
 import {ToastContainer} from "react-toastr";
 import {setToast} from '../services/noti-service';

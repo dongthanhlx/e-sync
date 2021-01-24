@@ -16,7 +16,7 @@ export default class DashboardRoute extends Component {
             this.props.location.pathname === "/dashboard"
                 ? <Redirect to="/dashboard/my-products" />
                 : <div className="dashboard">
-                    <TopNav />
+                    {/* <TopNav /> */}
                     <div className="below-top-nav">
                         <SideNav />
                         <div className="content-wrapper flex-grow-1 d-flex flex-column justify-content-between">

@@ -54,6 +54,7 @@ export default class LazadaNewProduct extends Component {
         this.state = {
             category_tree: [],
             brands: [],
+            renderFlag: true,
         };
 
         this.query_brand = null;
@@ -87,16 +88,29 @@ export default class LazadaNewProduct extends Component {
         });
     }
 
+    shouldComponentUpdate(nextProps) {
+        if (this.props.activeTab === nextProps.activeTab) {
+            return this.state.renderFlag;
+        }
+
+        return true;
+    }
+
+    isRerender(value) {
+        this.setState({
+            renderFlag: value
+        })
+    }
+
     componentDidUpdate(prev_props) {
         if (prev_props.brand_name !== this.props.brand_name) {
             this.api_get_lazada_brands(this.props.brand_name);
         }
+        
+        let old_images = sr(prev_props.general_product, ['images']);
+        let new_images = sr(this.props.general_product, ['images']);
 
-        if (prev_props.general_product.images.length !== this.props.general_product.images.length) {
-            console.log(prev_props.general_product.images);
-            console.log(this.props.general_product.images);
-            this.updateSlider(prev_props.general_product.images, this.props.general_product.images);
-        }
+        this.updateSlider(old_images, new_images);
     }
 
     removeSlide(index) {
@@ -121,8 +135,10 @@ export default class LazadaNewProduct extends Component {
     }
 
     updateSlider(oldImages, newImages) {
+        // if (JSON.stringify(oldImages) == JSON.stringify(newImages)) return;
+
         // this.removeAll(oldImages);
-        this.addAll(newImages);
+        // this.addAll(newImages);
     }
 
     async api_get_lazada_category_tree() {
@@ -167,10 +183,12 @@ export default class LazadaNewProduct extends Component {
             }
             setter = setter[path[i]]
         }
+        
+        this.isRerender(true);
         on_change(new_product);
     }
 
-    handle_change_general_form(path, value) {
+    handle_change_general_form(path, value, isRender = true) {
         const {general_product, on_change_general} = this.props;
         const new_product = Object.assign({}, general_product);
         let setter = new_product;
@@ -182,26 +200,25 @@ export default class LazadaNewProduct extends Component {
             }
             setter = setter[path[i]]
         }
+
+        this.isRerender(isRender);
         on_change_general(new_product);
     }
-
+    
     render() {
         const {
             additional_fields, 
             editmode, 
-            images_key, 
-            general_product, 
-            product,
-            activeTab,
-            editorKey,
             on_change_general,
+            general_product,
+            product
         } = this.props;
-        // console.log(general_product);
+
         const {category_tree, brands} = this.state;
         const normal_fields = additional_fields.filter(f => f.attribute_type === 'normal');
         const sku_fields = additional_fields.filter(f => f.attribute_type === 'sku');
         const variations = product.Skus[0].Sku;
-
+        console.log('render - lazadaaaaaaaaaaaaaaaa')
         return (
             <div className="lazada-new-product container px-0">
                 <FormGroup className="mb-0">
@@ -225,7 +242,7 @@ export default class LazadaNewProduct extends Component {
                         <ListImage
                             editmode={editmode}
                             general_product={general_product}
-                            on_change_general={(general_product) => {on_change_general(general_product)}} 
+                            on_change_general={(new_general_product) => {on_change_general(new_general_product); this.updateSlider(sr(general_product, ['images']), sr(new_general_product, ['images']))}} 
                         />
                     </Col>
 
@@ -249,7 +266,7 @@ export default class LazadaNewProduct extends Component {
                                             <img src={star} height={12} width={12} alt='start' key={i} />
                                         ))
                                     }
-                                    <a href="/" className='text-default font-weight-normal'>187 đánh giá</a>
+                                    <a href="/" className='text-default font-weight-normal ml-1'>187 đánh giá</a>
                                 </div>
 
                                 <div className="share">
@@ -432,17 +449,16 @@ export default class LazadaNewProduct extends Component {
                         <Editor
                             type='legacy'
                             design={sr(general_product, ['short_description'])}
-                            on_change_general={description => {this.handle_change_general_form(['short_description'], description)}}
-                            on_change_html_general={description => {this.handle_change_general_form(['html__short_description'], description)}}
+                            on_change_general={description => {this.handle_change_general_form(['short_description'], description, false)}}
+                            on_change_html_general={description => {this.handle_change_general_form(['html__short_description'], description, false)}}
                         />
                     </FormGroup>
 
                     <FormGroup className="mb-5">
                         <Editor
-                            // key={editorKey}
                             design={sr(general_product, ['description'])}
-                            on_change_general={description => {this.handle_change_general_form(['description'], description)}}
-                            on_change_html_general={description => {this.handle_change_general_form(['html__description'], description)}}
+                            on_change_general={description => {this.handle_change_general_form(['description'], description, false)}}
+                            on_change_html_general={description => {this.handle_change_general_form(['html__description'], description, false)}}
                         />
                     </FormGroup>
                 </div>
@@ -480,7 +496,7 @@ export default class LazadaNewProduct extends Component {
                                 <div className="td sku-cell">{variation.SellerSku}</div>
                                 <div className="td variation-fields-cell">
                                     <FormGroup>
-                                        <Label for="lp_special_from_date" className="required-field">Special price from date</Label>
+                                        <Label for="lp_special_from_date" className="required-field">Áp dụng giá đặc biệt từ ngày </Label>
                                         <DatePicker 
                                             withTime
                                             value={moment(sr(variation, ['special_from_date'])).valueOf()}
@@ -493,7 +509,7 @@ export default class LazadaNewProduct extends Component {
                                         />
                                     </FormGroup>
                                     <FormGroup>
-                                        <Label for="lp_special_to_date" className="required-field">Special price to date</Label>
+                                        <Label for="lp_special_to_date" className="required-field">đến ngày </Label>
                                         <DatePicker 
                                             withTime
                                             value={moment(sr(variation, ['special_to_date'])).valueOf()}
@@ -505,7 +521,7 @@ export default class LazadaNewProduct extends Component {
                                         />
                                     </FormGroup>
                                     <FormGroup>
-                                        <Label for="lp_package_content" className="required-field">Package content</Label>
+                                        <Label for="lp_package_content" className="required-field">Bộ sản phẩm đầy đủ</Label>
                                         <Input 
                                             type="text"
                                             value={sr(variation, ['package_content'])}

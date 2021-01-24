@@ -21,6 +21,10 @@ class ListImage extends Component {
         this.handle_change_general_form = this.handle_change_general_form.bind(this);
     }
 
+    // shouldComponentUpdate() {
+    //     return this.state.modal;
+    // }
+
     componentDidUpdate(prev_props, prev_state) {
         if (prev_state.modal !== this.state.modal) {
             if (this.state.modal) {
@@ -36,30 +40,6 @@ class ListImage extends Component {
     toggle = () => {
         this.setState({modal: !this.state.modal});
     };
-
-    // addImage(url) {
-    //     const images = this.state.images.slice();
-    //     images.push(url);
-    //     this.setState({
-    //         images: images,
-    //     })
-    // }
-
-    // updateImage(index, url) {
-    //     const images = this.state.images.slice();
-    //     images[index] = url;
-    //     this.setState({
-    //         images: images,
-    //     })
-    // }
-
-    // removeImage(index) {
-    //     const images = this.state.images.slice();
-    //     images.splice(index, 1);
-    //     this.setState({
-    //         images: images,
-    //     });
-    // }
 
     get_variation_table_titles() {
         const {general_product} = this.props;
@@ -81,6 +61,10 @@ class ListImage extends Component {
         let setter = new_product;
         for (let i = 0; i < path.length; i += 1) {
             if (i === path.length - 1) {
+                console.log('valueeee: ' + value);
+                console.log(setter);
+                // if (value === '') setter.splice(i, 1);
+                // else setter[path[i]] = value;
                 setter[path[i]] = value;
             } else {
                 setter[path[i]] = setter[path[i]] || {};
@@ -103,9 +87,10 @@ class ListImage extends Component {
             modal,
             general_product,
         } = this.state;
-        console.log(general_product);
         const images = sr(general_product, ['images']);
 
+        console.log('render listtt');
+            
         return (
             <div className='text-center'>
                 <button className="btn btn-outline-info waves-effect p-2 rounded" onClick={this.toggle}>
@@ -149,7 +134,7 @@ class ListImage extends Component {
 
                             <div className='mb-5 attributes-group-1'>
                                 <FormGroup>
-                                    <Label for="gp_package_width" className="required-field">Package width (cm)</Label>
+                                    <Label for="gp_package_width" className="required-field">Chiều rộng (cm)</Label>
                                     <Input 
                                         type="number" id="gp_package_width" 
                                         value={sr(general_product, ['package_width'])}
@@ -157,7 +142,7 @@ class ListImage extends Component {
                                     />
                                 </FormGroup>
                                 <FormGroup>
-                                    <Label for="gp_package_length" className="required-field">Package length (cm)</Label>
+                                    <Label for="gp_package_length" className="required-field">Chiều dài (cm)</Label>
                                     <Input 
                                         type="number" id="gp_package_length" 
                                         value={sr(general_product, ['package_length'])}
@@ -165,7 +150,7 @@ class ListImage extends Component {
                                     />
                                 </FormGroup>
                                 <FormGroup>
-                                    <Label for="gp_package_height" className="required-field">Package height (cm)</Label>
+                                    <Label for="gp_package_height" className="required-field">Chiều cao (cm)</Label>
                                     <Input 
                                         type="number" id="gp_package_height" 
                                         value={sr(general_product, ['package_height'])}
@@ -173,7 +158,7 @@ class ListImage extends Component {
                                     />
                                 </FormGroup>
                                 <FormGroup>
-                                    <Label for="gp_package_weight" className="required-field">Package weight (kg)</Label>
+                                    <Label for="gp_package_weight" className="required-field">Cân nặng (kg)</Label>
                                     <Input 
                                         type="number" id="gp_package_weight" 
                                         value={sr(general_product, ['package_weight'])}
@@ -184,7 +169,7 @@ class ListImage extends Component {
 
                             <div className="mb-5 attributes-group-2">
                                 <FormGroup>
-                                    <Label for="gp_variation_attribute_1_name" className="required-field">Variation attribute 1 - Name</Label>
+                                    <Label for="gp_variation_attribute_1_name" className="required-field">Tên biến thể 1</Label>
                                     <Input 
                                         type="text" id="gp_variation_attribute_1_name" 
                                         disabled={editmode}
@@ -194,7 +179,7 @@ class ListImage extends Component {
                                 </FormGroup>
                                 <FormGroup>
                                     <Label for="gp_variation_attribute_1_options" className="required-field">
-                                        Variation attribute 1 - Options - separated by comma ","
+                                        Các lựa chọn của biến thể 1 - được cách nhau bởi dấu ","
                                     </Label>
                                     <Input 
                                         type="text" id="gp_variation_attribute_1_options" 
@@ -206,7 +191,7 @@ class ListImage extends Component {
                                     />
                                 </FormGroup>
                                 <FormGroup>
-                                    <Label for="gp_variation_attribute_2_name" className="required-field">Variation attribute 2 - Name</Label>
+                                    <Label for="gp_variation_attribute_2_name" className="required-field">Tên biến thể 2</Label>
                                     <Input 
                                         type="text" id="gp_variation_attribute_2_name" 
                                         disabled={editmode}
@@ -216,7 +201,7 @@ class ListImage extends Component {
                                 </FormGroup>
                                 <FormGroup>
                                     <Label for="gp_variation_attribute_2_options" className="required-field">
-                                        Variation attribute 2 - Options - separated by comma ","
+                                        Các lựa chọn của biến thể 2 - được cách nhau bởi dấu ","
                                     </Label>
                                     <Input 
                                         type="text" id="gp_variation_attribute_2_options" 

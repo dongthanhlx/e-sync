@@ -49,6 +49,7 @@ export default class VariationValueTableItem extends Component {
                                             disabled={editmode}
                                             outline={item.options_index[0] !== i}
                                             onClick={e => {on_change_general(['variation_values', `${index}`, 'options_index', '0'], i)}}
+                                            className={'btn-sm'}
                                         >
                                             {op}
                                         </Button>
@@ -69,6 +70,7 @@ export default class VariationValueTableItem extends Component {
                                             disabled={editmode}
                                             outline={item.options_index[1] !== i}
                                             onClick={e => {on_change_general(['variation_values', `${index}`, 'options_index', '1'], i)}}
+                                            className={'btn-sm'}
                                         >
                                             {op}
                                         </Button>

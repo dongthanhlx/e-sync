@@ -71,7 +71,7 @@ export default class EditProduct extends Component {
             product_id: '',
 
             current_active_tab: TABS.lazada,
-            create_for: {lazada: true, tiki: true, shopee: true},
+            create_for: {lazada: true, tiki: true, shopee: false},
             publishing: false,
 
             general_product: make_general_init_product_form(),
@@ -89,6 +89,7 @@ export default class EditProduct extends Component {
             editorRemountKey1: uuidv4(),
             editorRemountKey2: uuidv4(),
         };
+        
         this.handle_general_variations_change = this.handle_general_variations_change.bind(this);
         this.handle_publish = this.handle_publish.bind(this);
         this.next_tab = this.next_tab.bind(this);
@@ -306,8 +307,8 @@ export default class EditProduct extends Component {
     is_current_special_tab() {
         const {current_active_tab, create_for} = this.state;
         const result = {is_first: false, is_last: false};
-        const showable_tabs = [TABS.lazada, TABS.tiki, TABS.shopee].filter(tab => create_for[tab]);
-        if (current_active_tab === TABS.general) {
+        const showable_tabs = [TABS.lazada, TABS.tiki].filter(tab => create_for[tab]);
+        if (current_active_tab === TABS.lazada) {
             result.is_first = true;
         }
         if (current_active_tab === showable_tabs[showable_tabs.length - 1]) {
@@ -318,7 +319,7 @@ export default class EditProduct extends Component {
 
     next_tab() {
         const {current_active_tab, create_for} = this.state;
-        const showable_tabs = [TABS.general].concat([TABS.lazada, TABS.tiki, TABS.shopee].filter(tab => create_for[tab]));
+        const showable_tabs = [TABS.lazada].concat([TABS.tiki].filter(tab => create_for[tab]));
         const i = showable_tabs.findIndex(tab => tab === current_active_tab);
         const nexttab = i + 1 < showable_tabs.length ? showable_tabs[i + 1] : showable_tabs[showable_tabs.length - 1];
         this.setState({current_active_tab: nexttab});
@@ -326,7 +327,7 @@ export default class EditProduct extends Component {
 
     prev_tab() {
         const {current_active_tab, create_for} = this.state;
-        const showable_tabs = [TABS.general].concat([TABS.lazada, TABS.tiki, TABS.shopee].filter(tab => create_for[tab]));
+        const showable_tabs = [TABS.lazada].concat([TABS.tiki].filter(tab => create_for[tab]));
         const i = showable_tabs.findIndex(tab => tab === current_active_tab);
         const prevtab = i - 1 >= 0 ? showable_tabs[i - 1] : showable_tabs[0];
         this.setState({current_active_tab: prevtab});
@@ -374,7 +375,7 @@ export default class EditProduct extends Component {
         return (
             <MainContent className="edit-product">
                 <FormGroup className="d-flex align-items-end">
-                    <Label for="input_create_for">Product will be published to</Label>
+                    <Label for="input_create_for">Sản phẩm sẽ được phát hành trên </Label>
                     <div className="ml-2 d-flex">
                         {
                             create_for.lazada
@@ -400,14 +401,6 @@ export default class EditProduct extends Component {
                     </div>
                 </FormGroup>
                 <Nav tabs>
-                    {/* <NavItem>
-                        <NavLink
-                            className={classnames({active: current_active_tab === TABS.general})}
-                            onClick={() => {this.toggle_tab(TABS.general)}}
-                        >
-                            General
-                        </NavLink>
-                    </NavItem> */}
                     {
                         create_for.lazada
                             ? <NavItem>
@@ -451,17 +444,16 @@ export default class EditProduct extends Component {
                             ? <TabPane tabId={TABS.lazada}>
                                 <LazadaNewProduct 
                                     editmode
-                                    editor_remount_key_1={editorRemountKey1}
-                                    editor_remount_key_2={editorRemountKey2}
-                                    images_key={general_images_key}
+                                    // editor_remount_key_1={editorRemountKey1}
+                                    // editor_remount_key_2={editorRemountKey2}
                                     brand_name={sr(general_product, ['brand'])}
-                                    images={sr(general_product, ['images'])}
                                     general_product={general_product}
                                     product={lazada_product} 
                                     additional_fields={lazada_additional_fields} 
                                     on_change_general={general_product => {this.handle_product_change('general_product', general_product)}}
                                     on_change={product => {this.handle_product_change('lazada_product', product)}} 
                                     on_variations_change={this.handle_general_variations_change}
+                                    activeTab={current_active_tab}
                                 />
                             </TabPane>
                             : null
@@ -471,13 +463,13 @@ export default class EditProduct extends Component {
                             ? <TabPane tabId={TABS.tiki}>
                                 <TikiNewProduct
                                     editmode
-                                    images_key={general_images_key}
                                     general_product={general_product}
                                     product={tiki_product} 
                                     additional_fields={tiki_additional_fields}
                                     on_change_general={general_product => {this.handle_product_change('general_product', general_product)}}
                                     on_change={product => {this.handle_product_change('tiki_product', product)}}
                                     on_variations_change={this.handle_general_variations_change}
+                                    activeTab={current_active_tab}
                                 />
                             </TabPane>
                             : null
@@ -508,7 +500,7 @@ export default class EditProduct extends Component {
                         size="sm" color="primary" 
                         onClick={this.handle_publish}
                     >
-                        Update
+                        Cập nhật
                     </LoadingButton>
                 </div>
             </MainContent>
